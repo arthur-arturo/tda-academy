@@ -1,0 +1,3426 @@
+/* ============================================================================
+   TDA PLAYBOOK: EJERCICIOS CLAVE E IMPERDIBLES (Pilas -> Colas -> Árboles -> Grafos)
+   Total: 31 Ejercicios de Cátedra (UADE / Programación II)
+   ============================================================================ */
+
+window.PLAYBOOK_EXERCISES = [
+  {
+    "id": "E01",
+    "cat": "pilas",
+    "catLabel": "Pilas (LIFO)",
+    "difficulty": "Básico Clave",
+    "title": "Copiar una Pila (Patrón de Doble Pasaje)",
+    "tag": "Clonación y Preservación",
+    "summary": "Clonar una Pila manteniendo el orden original exacto sin destruir la pila de entrada.",
+    "mision": "¿Cómo crear una copia idéntica de una PilaTDA sin perder los datos originales ni dejarlos invertidos? En un parcial o función utilitaria, las pilas pasadas por parámetro NO deben ser destruidas.",
+    "mentalClick": "💡 **El Click Mental:**\nUna pila funciona como una pila de platos (LIFO: Último en entrar, Primero en salir).\n* Si pasás los platos de **Pila A** a **Pila Auxiliar**, ¡el orden se invierte!\n* Si ahora desapilás de **Auxiliar** y metés simultáneamente en **Copia** y en **Pila A**, ¡el orden se invierte por segunda vez, volviendo a su estado original!\n```text\nPila A: [10, 20, 30] ──(Paso 1: vaciar a aux)──> Aux: [30, 20, 10]\nAux: [30, 20, 10] ──(Paso 2: recargar)──> Pila A: [10, 20, 30]  Y  Copia: [10, 20, 30]\n```",
+    "examTrap": "⚠️ **Trampa de Parcial habitual:**\nMuchos estudiantes olvidan la línea donde restauran la pila original: `origen.Apilar(x)`. Si devolvés la copia pero dejás `origen` vacía, el profesor te descuenta el 50% o más de los puntos por **efecto de lado destructivo**.",
+    "bigO": "⏱️ **Costo Temporal y Espacial:**\n* **Tiempo:** $O(n)$ — Recorremos los $n$ elementos exactamente dos veces (una para vaciar y otra para recargar).\n* **Espacio Auxiliar:** $O(n)$ — Usamos una pila auxiliar temporal de tamaño proporcional a la entrada.",
+    "code": "// Copia una PilaTDA preservando el orden y dejando la original intacta\npublic static PilaTDA copiarPila(PilaTDA origen) {\n    PilaTDA aux = new PilaTF();\n    aux.InicializarPila();\n    PilaTDA copia = new PilaTF();\n    copia.InicializarPila();\n\n    // Paso 1: Volcar origen a aux (invierte el orden)\n    while (!origen.PilaVacia()) {\n        aux.Apilar(origen.Tope());\n        origen.Desapilar();\n    }\n\n    // Paso 2: Volcar aux simultáneamente a copia y a origen (restaura orden)\n    while (!aux.PilaVacia()) {\n        int x = aux.Tope();\n        copia.Apilar(x);\n        origen.Apilar(x); // ¡Clave para no destruir la original!\n        aux.Desapilar();\n    }\n\n    return copia;\n}",
+    "sim": {
+      "type": "stacks",
+      "initial": {
+        "s1": {
+          "label": "Origen",
+          "items": [
+            10,
+            25,
+            40
+          ]
+        },
+        "s2": {
+          "label": "Auxiliar",
+          "items": []
+        },
+        "s3": {
+          "label": "Copia",
+          "items": []
+        }
+      },
+      "steps": [
+        {
+          "codeLine": 8,
+          "msg": "Inicio: Pila Origen contiene [10, 25, 40]. Aux y Copia están vacías.",
+          "s1": [
+            10,
+            25,
+            40
+          ],
+          "s2": [],
+          "s3": []
+        },
+        {
+          "codeLine": 10,
+          "msg": "Desapilamos el 40 de Origen y lo apilamos en Aux.",
+          "s1": [
+            10,
+            25
+          ],
+          "s2": [
+            40
+          ],
+          "s3": []
+        },
+        {
+          "codeLine": 10,
+          "msg": "Desapilamos el 25 de Origen y lo apilamos en Aux.",
+          "s1": [
+            10
+          ],
+          "s2": [
+            40,
+            25
+          ],
+          "s3": []
+        },
+        {
+          "codeLine": 10,
+          "msg": "Desapilamos el 10 de Origen y lo apilamos en Aux. Origen quedó vacía e invertida en Aux.",
+          "s1": [],
+          "s2": [
+            40,
+            25,
+            10
+          ],
+          "s3": []
+        },
+        {
+          "codeLine": 17,
+          "msg": "Desapilamos el 10 de Aux: lo apilamos en Copia y en Origen.",
+          "s1": [
+            10
+          ],
+          "s2": [
+            40,
+            25
+          ],
+          "s3": [
+            10
+          ]
+        },
+        {
+          "codeLine": 17,
+          "msg": "Desapilamos el 25 de Aux: lo apilamos en Copia y en Origen.",
+          "s1": [
+            10,
+            25
+          ],
+          "s2": [
+            40
+          ],
+          "s3": [
+            10,
+            25
+          ]
+        },
+        {
+          "codeLine": 17,
+          "msg": "Desapilamos el 40 de Aux: lo apilamos en Copia y en Origen.",
+          "s1": [
+            10,
+            25,
+            40
+          ],
+          "s2": [],
+          "s3": [
+            10,
+            25,
+            40
+          ]
+        },
+        {
+          "codeLine": 22,
+          "msg": "¡Listo! Retornamos Copia. Observa cómo Origen y Copia quedaron idénticas.",
+          "s1": [
+            10,
+            25,
+            40
+          ],
+          "s2": [],
+          "s3": [
+            10,
+            25,
+            40
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "E02",
+    "cat": "pilas",
+    "catLabel": "Pilas (LIFO)",
+    "difficulty": "Básico Clave",
+    "title": "Invertir una Pila (Usando una Cola Auxiliar)",
+    "tag": "Combinación Pila + Cola",
+    "summary": "Dar vuelta el orden de una Pila in-situ aprovechando la asimetría LIFO vs FIFO.",
+    "mision": "Modificar una PilaTDA de manera que el elemento que estaba en el fondo pase al tope, y el del tope al fondo.",
+    "mentalClick": "💡 **El Click Mental:**\n* La **Pila** es LIFO (sale el último que entró).\n* La **Cola** es FIFO (sale el primero que entró).\nSi vaciás una Pila dentro de una Cola, los elementos entran en orden inverso. Como la Cola saca en el mismo orden en que entraron, al sacarlos de la Cola y volverlos a apilar en la Pila, ¡quedan exactamente invertidos!\n```text\nPila: [1, 2, 3] (Tope: 3) ──> Cola: primero entra 3, luego 2, luego 1 (Frente: 3)\nCola: saca 3, 2, 1 ──> Pila: [3, 2, 1] (Tope: 1)  ¡Invertida!\n```",
+    "examTrap": "⚠️ **Trampa de Parcial:**\nIntentar invertir una Pila usando OTRA Pila auxiliar. Si pasás de Pila a Pila y de nuevo a Pila, ¡se invierte dos veces y vuelve a quedar en el orden original! Para invertir una Pila usando sólo Pilas necesitás **dos pilas auxiliares**.",
+    "bigO": "⏱️ **Costo Temporal y Espacial:**\n* **Tiempo:** $O(n)$ — Dos bucles lineales: vaciar a la cola y vaciar a la pila.\n* **Espacio Auxiliar:** $O(n)$ — Memoria para almacenar los $n$ elementos en la cola auxiliar.",
+    "code": "// Invierte el contenido de una Pila dada usando una Cola auxiliar\npublic static void invertirPila(PilaTDA p) {\n    ColaTDA aux = new ColaPU();\n    aux.InicializarCola();\n\n    // Paso 1: De Pila a Cola (la cola almacena en orden de desapilado)\n    while (!p.PilaVacia()) {\n        aux.Acolar(p.Tope());\n        p.Desapilar();\n    }\n\n    // Paso 2: De Cola a Pila (los elementos se apilan invertidos)\n    while (!aux.ColaVacia()) {\n        p.Apilar(aux.Primero());\n        aux.Desacolar();\n    }\n}",
+    "sim": {
+      "type": "stack_queue",
+      "initial": {
+        "s1": {
+          "label": "Pila P",
+          "type": "stack",
+          "items": [
+            5,
+            15,
+            30
+          ]
+        },
+        "s2": {
+          "label": "Cola Auxiliar",
+          "type": "queue",
+          "items": []
+        }
+      },
+      "steps": [
+        {
+          "codeLine": 7,
+          "msg": "Pila inicial: [5, 15, 30] (Tope es 30). Cola auxiliar vacía.",
+          "s1": [
+            5,
+            15,
+            30
+          ],
+          "s2": []
+        },
+        {
+          "codeLine": 8,
+          "msg": "Desapilamos el 30 y lo acolamos en la Cola.",
+          "s1": [
+            5,
+            15
+          ],
+          "s2": [
+            30
+          ]
+        },
+        {
+          "codeLine": 8,
+          "msg": "Desapilamos el 15 y lo acolamos en la Cola.",
+          "s1": [
+            5
+          ],
+          "s2": [
+            30,
+            15
+          ]
+        },
+        {
+          "codeLine": 8,
+          "msg": "Desapilamos el 5 y lo acolamos en la Cola. Pila queda vacía.",
+          "s1": [],
+          "s2": [
+            30,
+            15,
+            5
+          ]
+        },
+        {
+          "codeLine": 14,
+          "msg": "Desacolamos el 30 (primero de la cola) y lo apilamos en Pila.",
+          "s1": [
+            30
+          ],
+          "s2": [
+            15,
+            5
+          ]
+        },
+        {
+          "codeLine": 14,
+          "msg": "Desacolamos el 15 y lo apilamos en Pila.",
+          "s1": [
+            30,
+            15
+          ],
+          "s2": [
+            5
+          ]
+        },
+        {
+          "codeLine": 14,
+          "msg": "Desacolamos el 5 y lo apilamos en Pila.",
+          "s1": [
+            30,
+            15,
+            5
+          ],
+          "s2": []
+        },
+        {
+          "codeLine": 18,
+          "msg": "¡Finalizado! El orden original [5, 15, 30] ahora es [30, 15, 5] (Tope es 5).",
+          "s1": [
+            30,
+            15,
+            5
+          ],
+          "s2": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "E03",
+    "cat": "pilas",
+    "catLabel": "Pilas (LIFO)",
+    "difficulty": "Básico",
+    "title": "Contar Elementos y Calcular Promedio sin Destruir",
+    "tag": "Recorrido e Invarianza",
+    "summary": "Calcular el promedio numérico de los elementos de una Pila restaurándola al estado original.",
+    "mision": "Obtener el promedio de todos los números dentro de una PilaTDA, manejando correctamente el caso borde de pila vacía y asegurando que la pila no sufra modificaciones.",
+    "mentalClick": "💡 **El Click Mental:**\nUna Pila sólo permite ver el elemento del Tope. Para 'ver' los elementos que están abajo, estamos obligados a desapilar.\nPor lo tanto, la estrategia estándar de lectura en Pilas es:\n1. Desapilar hacia una pila auxiliar sumando los valores e incrementando un contador.\n2. Una vez vacía la original, volver a pasar todos los elementos de la auxiliar a la original.",
+    "examTrap": "⚠️ **Trampa de Parcial:**\nDivisión por cero si la pila está vacía ('cant == 0'). Siempre valida si 'p.PilaVacia()' al inicio antes de calcular '(double) suma / cant'.",
+    "bigO": "⏱️ **Costo:**\n* **Tiempo:** $O(n)$ — Desapilar $n$ veces y re-apilar $n$ veces.\n* **Espacio:** $O(n)$ — Pila auxiliar para preservar los datos.",
+    "code": "public static double calcularPromedio(PilaTDA p) {\n    if (p.PilaVacia()) return 0.0;\n\n    PilaTDA aux = new PilaTF();\n    aux.InicializarPila();\n\n    int suma = 0;\n    int cantidad = 0;\n\n    // Recorrido acumulador\n    while (!p.PilaVacia()) {\n        int val = p.Tope();\n        suma += val;\n        cantidad++;\n        aux.Apilar(val);\n        p.Desapilar();\n    }\n\n    // Restauración inmaculada\n    while (!aux.PilaVacia()) {\n        p.Apilar(aux.Tope());\n        aux.Desapilar();\n    }\n\n    return (double) suma / cantidad;\n}",
+    "sim": {
+      "type": "stacks",
+      "initial": {
+        "s1": {
+          "label": "Pila P",
+          "items": [
+            10,
+            20,
+            30
+          ]
+        },
+        "s2": {
+          "label": "Auxiliar",
+          "items": []
+        }
+      },
+      "steps": [
+        {
+          "codeLine": 11,
+          "msg": "Pila: [10, 20, 30]. Suma = 0, Cantidad = 0.",
+          "s1": [
+            10,
+            20,
+            30
+          ],
+          "s2": []
+        },
+        {
+          "codeLine": 13,
+          "msg": "Leemos Tope 30. Suma = 30, Cantidad = 1. Pasamos 30 a aux.",
+          "s1": [
+            10,
+            20
+          ],
+          "s2": [
+            30
+          ]
+        },
+        {
+          "codeLine": 13,
+          "msg": "Leemos Tope 20. Suma = 50, Cantidad = 2. Pasamos 20 a aux.",
+          "s1": [
+            10
+          ],
+          "s2": [
+            30,
+            20
+          ]
+        },
+        {
+          "codeLine": 13,
+          "msg": "Leemos Tope 10. Suma = 60, Cantidad = 3. Pasamos 10 a aux.",
+          "s1": [],
+          "s2": [
+            30,
+            20,
+            10
+          ]
+        },
+        {
+          "codeLine": 20,
+          "msg": "Restauramos: 10 vuelve a P.",
+          "s1": [
+            10
+          ],
+          "s2": [
+            30,
+            20
+          ]
+        },
+        {
+          "codeLine": 20,
+          "msg": "Restauramos: 20 vuelve a P.",
+          "s1": [
+            10,
+            20
+          ],
+          "s2": [
+            30
+          ]
+        },
+        {
+          "codeLine": 20,
+          "msg": "Restauramos: 30 vuelve a P. Pila original intacta. Promedio = 60 / 3 = 20.0.",
+          "s1": [
+            10,
+            20,
+            30
+          ],
+          "s2": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "E04",
+    "cat": "pilas",
+    "catLabel": "Pilas (LIFO)",
+    "difficulty": "Intermedio",
+    "title": "Pila Capicúa / Palíndromo",
+    "tag": "Comparación Simétrica",
+    "summary": "Determinar si una Pila se lee igual de arriba hacia abajo que de abajo hacia arriba.",
+    "mision": "Escribir un método que retorne true si la secuencia de elementos en la Pila es simétrica (capicúa), preservando la pila de origen.",
+    "mentalClick": "💡 **El Click Mental:**\nUna secuencia es capicúa si al invertirla queda idéntica a la original.\n1. Sacamos una copia de la Pila original (usando nuestro patrón E01).\n2. Creamos una versión invertida de la copia.\n3. Desapilamos ambas en paralelo comparando sus topes. Si en algún momento difieren, no es capicúa.",
+    "examTrap": "⚠️ **Trampa de Parcial:**\nModificar la pila que te pasan como parámetro directamente. Si la invertís para comparar y no la volvés a dejar como estaba, rompés el contrato del método.",
+    "bigO": "⏱️ **Costo:**\n* **Tiempo:** $O(n)$ — Clonar, invertir y comparar toman pasajes lineales.\n* **Espacio:** $O(n)$ — Estructuras auxiliares para la copia.",
+    "code": "public static boolean esCapicua(PilaTDA p) {\n    PilaTDA copia = copiarPila(p);     // Mantiene p intacta\n    PilaTDA invertida = new PilaTF();\n    invertida.InicializarPila();\n\n    // Invertimos la copia hacia 'invertida'\n    PilaTDA aux = copiarPila(copia);\n    while (!aux.PilaVacia()) {\n        invertida.Apilar(aux.Tope());\n        aux.Desapilar();\n    }\n\n    boolean capicua = true;\n    while (!copia.PilaVacia() && capicua) {\n        if (copia.Tope() != invertida.Tope()) {\n            capicua = false;\n        }\n        copia.Desapilar();\n        invertida.Desapilar();\n    }\n\n    return capicua;\n}",
+    "sim": {
+      "type": "stacks",
+      "initial": {
+        "s1": {
+          "label": "Pila [1, 2, 1]",
+          "items": [
+            1,
+            2,
+            1
+          ]
+        },
+        "s2": {
+          "label": "Invertida",
+          "items": [
+            1,
+            2,
+            1
+          ]
+        }
+      },
+      "steps": [
+        {
+          "codeLine": 12,
+          "msg": "Comparamos Tope de Copia (1) con Tope de Invertida (1): Coinciden.",
+          "s1": [
+            1,
+            2,
+            1
+          ],
+          "s2": [
+            1,
+            2,
+            1
+          ]
+        },
+        {
+          "codeLine": 16,
+          "msg": "Desapilamos ambos. Comparamos Topes (2 == 2): Coinciden.",
+          "s1": [
+            1,
+            2
+          ],
+          "s2": [
+            1,
+            2
+          ]
+        },
+        {
+          "codeLine": 16,
+          "msg": "Desapilamos ambos. Comparamos Topes (1 == 1): Coinciden.",
+          "s1": [
+            1
+          ],
+          "s2": [
+            1
+          ]
+        },
+        {
+          "codeLine": 20,
+          "msg": "Pilas vaciadas sin discrepancias: ¡Es Capicúa! Retorna true.",
+          "s1": [],
+          "s2": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "E05",
+    "cat": "pilas",
+    "catLabel": "Pilas (LIFO)",
+    "difficulty": "Intermedio",
+    "title": "Eliminar Elemento X de una Pila",
+    "tag": "Filtrado Selectivo",
+    "summary": "Remover todas las apariciones de un valor X dentro de una Pila manteniendo el orden del resto.",
+    "mision": "Dada una PilaTDA p y un entero x, eliminar todas las ocurrencias de x dentro de p preservando el orden relativo de los demás elementos.",
+    "mentalClick": "💡 **El Click Mental:**\n1. Desapilamos todos los elementos de `p` hacia una pila `aux`, pero **filtrando**: sólo apilamos en `aux` aquellos números que sean distintos de `x`.\n2. Luego desapilamos `aux` y devolvemos todo a `p`.\n¡El doble pasaje garantiza que el orden relativo de los elementos sobrevivientes no se invierta!",
+    "examTrap": "⚠️ **Trampa de Parcial:**\nHacer un solo pasaje a una nueva pila: si haces un solo pasaje, los elementos quedan al revés. Siempre recordá: *2 pasajes = orden original*.",
+    "bigO": "⏱️ **Costo:**\n* **Tiempo:** $O(n)$ — Dos recorridos completos.\n* **Espacio:** $O(n)$ — Pila auxiliar.",
+    "code": "public static void eliminarElemento(PilaTDA p, int x) {\n    PilaTDA aux = new PilaTF();\n    aux.InicializarPila();\n\n    // Paso 1: Volcar a aux descartando los iguales a x\n    while (!p.PilaVacia()) {\n        int elem = p.Tope();\n        if (elem != x) {\n            aux.Apilar(elem);\n        }\n        p.Desapilar();\n    }\n\n    // Paso 2: Volcar de aux a p restaurando el orden\n    while (!aux.PilaVacia()) {\n        p.Apilar(aux.Tope());\n        aux.Desapilar();\n    }\n}",
+    "sim": {
+      "type": "stacks",
+      "initial": {
+        "s1": {
+          "label": "Pila P (X = 9)",
+          "items": [
+            4,
+            9,
+            7,
+            9,
+            2
+          ]
+        },
+        "s2": {
+          "label": "Auxiliar",
+          "items": []
+        }
+      },
+      "steps": [
+        {
+          "codeLine": 6,
+          "msg": "Pila inicial: [4, 9, 7, 9, 2] (Tope = 2). Buscamos eliminar X = 9.",
+          "s1": [
+            4,
+            9,
+            7,
+            9,
+            2
+          ],
+          "s2": []
+        },
+        {
+          "codeLine": 9,
+          "msg": "Tope 2 != 9: Lo apilamos en Aux.",
+          "s1": [
+            4,
+            9,
+            7,
+            9
+          ],
+          "s2": [
+            2
+          ]
+        },
+        {
+          "codeLine": 8,
+          "msg": "Tope 9 == 9: ¡Descartado! No se apila en Aux.",
+          "s1": [
+            4,
+            9,
+            7
+          ],
+          "s2": [
+            2
+          ]
+        },
+        {
+          "codeLine": 9,
+          "msg": "Tope 7 != 9: Lo apilamos en Aux.",
+          "s1": [
+            4,
+            9
+          ],
+          "s2": [
+            2,
+            7
+          ]
+        },
+        {
+          "codeLine": 8,
+          "msg": "Tope 9 == 9: ¡Descartado! No se apila en Aux.",
+          "s1": [
+            4
+          ],
+          "s2": [
+            2,
+            7
+          ]
+        },
+        {
+          "codeLine": 9,
+          "msg": "Tope 4 != 9: Lo apilamos en Aux.",
+          "s1": [],
+          "s2": [
+            2,
+            7,
+            4
+          ]
+        },
+        {
+          "codeLine": 16,
+          "msg": "Recargamos de Aux a P: [4, 7, 2]. ¡El orden se mantuvo sin ningún 9!",
+          "s1": [
+            4,
+            7,
+            2
+          ],
+          "s2": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "E06",
+    "cat": "colas",
+    "catLabel": "Colas (FIFO)",
+    "difficulty": "Básico Clave",
+    "title": "Copiar una Cola (Preservación Sagrada)",
+    "tag": "Clonación y Preservación",
+    "summary": "Crear una réplica idéntica de una ColaTDA dejando la original exactamente intacta.",
+    "mision": "Clonar una ColaTDA sin perder el orden FIFO ni dejar la cola original vacía.",
+    "mentalClick": "💡 **El Click Mental:**\nEn una Cola (FIFO: Primero en entrar, primero en salir), los elementos salen en el mismo orden en que entraron.\nA diferencia de la pila, **aquí no se invierten los datos al salir**.\nBasta con desacolar de `origen`, encolar en `copia` y en una `aux`, y al final recargar `aux` en `origen`.",
+    "examTrap": "⚠️ **Trampa de Parcial:**\nIntentar leer una cola con un bucle `for` o asumiendo que es un arreglo. En el rol de usuario de TDA, **está estrictamente prohibido acceder a arreglos internos**. Solo se usan `Acolar`, `Desacolar`, `Primero` y `ColaVacia`.",
+    "bigO": "⏱️ **Costo:**\n* **Tiempo:** $O(n)$ — Desacolar $n$ elementos y restaurarlos.\n* **Espacio:** $O(n)$ — Cola auxiliar.",
+    "code": "public static ColaTDA copiarCola(ColaTDA origen) {\n    ColaTDA copia = new ColaPU();\n    copia.InicializarCola();\n    ColaTDA aux = new ColaPU();\n    aux.InicializarCola();\n\n    // Desacolamos de origen cargando en copia y aux\n    while (!origen.ColaVacia()) {\n        int x = origen.Primero();\n        copia.Acolar(x);\n        aux.Acolar(x);\n        origen.Desacolar();\n    }\n\n    // Restauramos origen desde aux\n    while (!aux.ColaVacia()) {\n        origen.Acolar(aux.Primero());\n        aux.Desacolar();\n    }\n\n    return copia;\n}",
+    "sim": {
+      "type": "queue_queue",
+      "initial": {
+        "s1": {
+          "label": "Cola Origen",
+          "items": [
+            10,
+            20,
+            30
+          ]
+        },
+        "s2": {
+          "label": "Auxiliar",
+          "items": []
+        },
+        "s3": {
+          "label": "Copia",
+          "items": []
+        }
+      },
+      "steps": [
+        {
+          "codeLine": 8,
+          "msg": "Cola Origen: [10, 20, 30] (Primero: 10).",
+          "s1": [
+            10,
+            20,
+            30
+          ],
+          "s2": [],
+          "s3": []
+        },
+        {
+          "codeLine": 11,
+          "msg": "Desacolamos 10 y lo acolamos a Copia y Aux.",
+          "s1": [
+            20,
+            30
+          ],
+          "s2": [
+            10
+          ],
+          "s3": [
+            10
+          ]
+        },
+        {
+          "codeLine": 11,
+          "msg": "Desacolamos 20 y lo acolamos a Copia y Aux.",
+          "s1": [
+            30
+          ],
+          "s2": [
+            10,
+            20
+          ],
+          "s3": [
+            10,
+            20
+          ]
+        },
+        {
+          "codeLine": 11,
+          "msg": "Desacolamos 30 y lo acolamos a Copia y Aux. Origen vacía.",
+          "s1": [],
+          "s2": [
+            10,
+            20,
+            30
+          ],
+          "s3": [
+            10,
+            20,
+            30
+          ]
+        },
+        {
+          "codeLine": 18,
+          "msg": "Restauramos Origen vaciando Aux. Origen y Copia quedan listas e idénticas.",
+          "s1": [
+            10,
+            20,
+            30
+          ],
+          "s2": [],
+          "s3": [
+            10,
+            20,
+            30
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "E07",
+    "cat": "colas",
+    "catLabel": "Colas (FIFO)",
+    "difficulty": "Básico Clave",
+    "title": "Invertir una Cola usando una Pila",
+    "tag": "Combinación Cola + Pila",
+    "summary": "Invertir el orden de una Cola aprovechando la naturaleza inversa de una Pila.",
+    "mision": "Invertir el orden de una ColaTDA in-situ de modo que el último elemento pase a ser el primero.",
+    "mentalClick": "💡 **El Click Mental:**\n* La Cola saca en orden FIFO: 1, 2, 3.\n* Si metés 1, 2, 3 en una Pila, el 3 queda en el Tope.\n* Al desapilar, sale 3, luego 2, luego 1.\n* Al acolarlos de vuelta en la Cola, ¡la cola quedó mágicamente invertida: [3, 2, 1]!",
+    "examTrap": "⚠️ **Trampa de Parcial:**\nIntentar invertir una Cola usando OTRA Cola. Como ambas son FIFO, los datos saldrían y entrarían en el mismo orden sin invertirse nunca. La inversión natural siempre requiere una **Pila**.",
+    "bigO": "⏱️ **Costo:**\n* **Tiempo:** $O(n)$ — Vaciar la cola a la pila ($n$) y de la pila a la cola ($n$).\n* **Espacio:** $O(n)$ — Pila auxiliar de $n$ elementos.",
+    "code": "public static void invertirCola(ColaTDA c) {\n    PilaTDA pila = new PilaTF();\n    pila.InicializarPila();\n\n    // Paso 1: Volcar toda la cola en la pila\n    while (!c.ColaVacia()) {\n        pila.Apilar(c.Primero());\n        c.Desacolar();\n    }\n\n    // Paso 2: Volcar toda la pila en la cola (invierte el orden)\n    while (!pila.PilaVacia()) {\n        c.Acolar(pila.Tope());\n        pila.Desapilar();\n    }\n}",
+    "sim": {
+      "type": "stack_queue",
+      "initial": {
+        "s1": {
+          "label": "Cola C",
+          "type": "queue",
+          "items": [
+            1,
+            2,
+            3
+          ]
+        },
+        "s2": {
+          "label": "Pila Auxiliar",
+          "type": "stack",
+          "items": []
+        }
+      },
+      "steps": [
+        {
+          "codeLine": 6,
+          "msg": "Cola C: [1, 2, 3]. Primero es 1.",
+          "s1": [
+            1,
+            2,
+            3
+          ],
+          "s2": []
+        },
+        {
+          "codeLine": 7,
+          "msg": "Desacolamos 1 y lo apilamos.",
+          "s1": [
+            2,
+            3
+          ],
+          "s2": [
+            1
+          ]
+        },
+        {
+          "codeLine": 7,
+          "msg": "Desacolamos 2 y lo apilamos.",
+          "s1": [
+            3
+          ],
+          "s2": [
+            1,
+            2
+          ]
+        },
+        {
+          "codeLine": 7,
+          "msg": "Desacolamos 3 y lo apilamos. Tope de la pila es 3.",
+          "s1": [],
+          "s2": [
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "codeLine": 13,
+          "msg": "Desapilamos el 3 y lo acolamos a C.",
+          "s1": [
+            3
+          ],
+          "s2": [
+            1,
+            2
+          ]
+        },
+        {
+          "codeLine": 13,
+          "msg": "Desapilamos el 2 y lo acolamos a C.",
+          "s1": [
+            3,
+            2
+          ],
+          "s2": [
+            1
+          ]
+        },
+        {
+          "codeLine": 13,
+          "msg": "Desapilamos el 1 y lo acolamos a C.",
+          "s1": [
+            3,
+            2,
+            1
+          ],
+          "s2": []
+        },
+        {
+          "codeLine": 16,
+          "msg": "¡Cola invertida! Original era [1, 2, 3], ahora es [3, 2, 1].",
+          "s1": [
+            3,
+            2,
+            1
+          ],
+          "s2": []
+        }
+      ]
+    }
+  },
+  {
+    "id": "E08",
+    "cat": "colas",
+    "catLabel": "Colas (FIFO)",
+    "difficulty": "Combinado",
+    "title": "Intercalar dos Colas (Round-Robin / Turnos)",
+    "tag": "Algoritmo de Fusión",
+    "summary": "Generar una nueva Cola alternando 1 elemento de c1 y 1 de c2 sin alterar las originales.",
+    "mision": "Dadas dos colas de turnos de clientes o procesos de CPU, intercalarlas equitativamente: si una cola es más larga que la otra, continuar volcando los elementos sobrantes al final.",
+    "mentalClick": "💡 **El Click Mental:**\n1. Clonamos `c1` y `c2` usando `copiarCola` para trabajar de forma no destructiva.\n2. Mientras al menos una de las dos colas tenga elementos (`!c1.ColaVacia() || !c2.ColaVacia()`), si `c1` tiene elementos desacolamos uno, y si `c2` tiene elementos desacolamos uno.",
+    "examTrap": "⚠️ **Trampa de Parcial:**\nPoner un `&&` en el while en vez de `||`. Si ponés `&&` y una cola tiene 2 elementos y la otra 100, el bucle se detiene en el elemento 2 y perdiste 98 elementos.",
+    "bigO": "⏱️ **Costo:**\n* **Tiempo:** $O(n + m)$ donde $n$ y $m$ son las longitudes de cada cola.\n* **Espacio:** $O(n + m)$ para la nueva cola y copias.",
+    "code": "public static ColaTDA intercalarColas(ColaTDA c1, ColaTDA c2) {\n    ColaTDA cp1 = copiarCola(c1);\n    ColaTDA cp2 = copiarCola(c2);\n    ColaTDA res = new ColaPU();\n    res.InicializarCola();\n\n    while (!cp1.ColaVacia() || !cp2.ColaVacia()) {\n        if (!cp1.ColaVacia()) {\n            res.Acolar(cp1.Primero());\n            cp1.Desacolar();\n        }\n        if (!cp2.ColaVacia()) {\n            res.Acolar(cp2.Primero());\n            cp2.Desacolar();\n        }\n    }\n\n    return res;\n}",
+    "sim": {
+      "type": "queue_queue",
+      "initial": {
+        "s1": {
+          "label": "Cola 1",
+          "items": [
+            1,
+            3
+          ]
+        },
+        "s2": {
+          "label": "Cola 2",
+          "items": [
+            2,
+            4,
+            6
+          ]
+        },
+        "s3": {
+          "label": "Intercalada",
+          "items": []
+        }
+      },
+      "steps": [
+        {
+          "codeLine": 8,
+          "msg": "C1: [1, 3], C2: [2, 4, 6]. Empezamos a alternar turnos.",
+          "s1": [
+            1,
+            3
+          ],
+          "s2": [
+            2,
+            4,
+            6
+          ],
+          "s3": []
+        },
+        {
+          "codeLine": 10,
+          "msg": "Turno C1: Acolamos 1 en resultado.",
+          "s1": [
+            3
+          ],
+          "s2": [
+            2,
+            4,
+            6
+          ],
+          "s3": [
+            1
+          ]
+        },
+        {
+          "codeLine": 14,
+          "msg": "Turno C2: Acolamos 2 en resultado.",
+          "s1": [
+            3
+          ],
+          "s2": [
+            4,
+            6
+          ],
+          "s3": [
+            1,
+            2
+          ]
+        },
+        {
+          "codeLine": 10,
+          "msg": "Turno C1: Acolamos 3 en resultado (C1 quedó vacía).",
+          "s1": [],
+          "s2": [
+            4,
+            6
+          ],
+          "s3": [
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "codeLine": 14,
+          "msg": "Turno C2: Acolamos 4 en resultado.",
+          "s1": [],
+          "s2": [
+            6
+          ],
+          "s3": [
+            1,
+            2,
+            3,
+            4
+          ]
+        },
+        {
+          "codeLine": 14,
+          "msg": "Turno C2: Acolamos 6 en resultado.",
+          "s1": [],
+          "s2": [],
+          "s3": [
+            1,
+            2,
+            3,
+            4,
+            6
+          ]
+        },
+        {
+          "codeLine": 19,
+          "msg": "¡Finalizado! Resultado contiene [1, 2, 3, 4, 6].",
+          "s1": [],
+          "s2": [],
+          "s3": [
+            1,
+            2,
+            3,
+            4,
+            6
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "E09",
+    "cat": "colas",
+    "catLabel": "Colas (FIFO)",
+    "difficulty": "Intermedio",
+    "title": "Desensamblar Cola con Prioridad a Cola Común",
+    "tag": "Colas con Prioridad",
+    "summary": "Vaciar una ColaPrioridadTDA en una ColaTDA común ordenada de mayor a menor prioridad.",
+    "mision": "Transformar una ColaPrioridadTDA en una ColaTDA estándar con los elementos ordenados según su turno de atención.",
+    "mentalClick": "💡 **El Click Mental:**\nUna `ColaPrioridadTDA` ya hace el trabajo pesado por dentro: cada vez que llamás a `Primero()`, siempre te entrega el elemento con el valor de prioridad más alto.\nPor lo tanto, simplemente desacolamos sucesivamente hasta vaciarla y vamos acolando en una `ColaTDA` simple.",
+    "examTrap": "⚠️ **Trampa de Parcial:**\nConfundir el método `Primero()` (el valor del elemento) con `Prioridad()` (el peso de prioridad). Para la cola común sólo nos interesa acolalar el valor: `cSimple.Acolar(cp.Primero())`.",
+    "bigO": "⏱️ **Costo:**\n* **Tiempo:** $O(n)$ o $O(n^2)$ dependiendo de si la implementación interna de la cola con prioridad ordena al insertar o al sacar.\n* **Espacio:** $O(n)$ para la nueva cola simple.",
+    "code": "public static ColaTDA prioridadAColaSimple(ColaPrioridadTDA cp) {\n    ColaTDA resultado = new ColaPU();\n    resultado.InicializarCola();\n\n    while (!cp.ColaVacia()) {\n        int elemento = cp.Primero();\n        resultado.Acolar(elemento);\n        cp.Desacolar();\n    }\n\n    return resultado;\n}",
+    "sim": {
+      "type": "prio_queue",
+      "initial": {
+        "s1": {
+          "label": "Cola Prioridad (Val, Prio)",
+          "items": [
+            {
+              "v": 10,
+              "p": 1
+            },
+            {
+              "v": 50,
+              "p": 9
+            },
+            {
+              "v": 25,
+              "p": 5
+            }
+          ]
+        },
+        "s2": {
+          "label": "Cola Simple Resultante",
+          "items": []
+        }
+      },
+      "steps": [
+        {
+          "codeLine": 5,
+          "msg": "Elemento con mayor prioridad es 50 (Prio 9).",
+          "s1": [
+            {
+              "v": 50,
+              "p": 9
+            },
+            {
+              "v": 25,
+              "p": 5
+            },
+            {
+              "v": 10,
+              "p": 1
+            }
+          ],
+          "s2": []
+        },
+        {
+          "codeLine": 7,
+          "msg": "Desacolamos 50 y lo acolamos en la cola común.",
+          "s1": [
+            {
+              "v": 25,
+              "p": 5
+            },
+            {
+              "v": 10,
+              "p": 1
+            }
+          ],
+          "s2": [
+            50
+          ]
+        },
+        {
+          "codeLine": 7,
+          "msg": "Siguiente mayor prioridad es 25 (Prio 5). Desacolamos y acolamos.",
+          "s1": [
+            {
+              "v": 10,
+              "p": 1
+            }
+          ],
+          "s2": [
+            50,
+            25
+          ]
+        },
+        {
+          "codeLine": 7,
+          "msg": "Último elemento es 10 (Prio 1). Desacolamos y acolamos.",
+          "s1": [],
+          "s2": [
+            50,
+            25,
+            10
+          ]
+        },
+        {
+          "codeLine": 11,
+          "msg": "Cola simple resultante: [50, 25, 10] perfectamente ordenada.",
+          "s1": [],
+          "s2": [
+            50,
+            25,
+            10
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "E10",
+    "cat": "combinados",
+    "catLabel": "Pila + Cola + Conjunto",
+    "difficulty": "Parcial Clave",
+    "title": "Eliminar Duplicados de una Cola con Conjunto",
+    "tag": "Filtro de Unicidad",
+    "summary": "Conservar sólo la primera aparición de cada número en una Cola usando un Conjunto como memoria de vistos.",
+    "mision": "Dada una ColaTDA con posibles elementos repetidos (ej: [4, 2, 4, 9, 2, 5]), retornar una nueva cola donde cada valor aparezca una única vez respetando el orden original de primera aparición.",
+    "mentalClick": "💡 **El Click Mental:**\n¿Cómo recordar rápidamente si ya vimos un número antes?\n¡Con un **ConjuntoTDA**!\n* Los conjuntos garantizan unicidad y tienen el método `Pertenece(x)`.\n* Recorremos la cola: si el elemento **NO pertenece** al conjunto, es la primera vez que lo vemos $\\implies$ lo agregamos al conjunto y lo acolamos a la cola final.\n* Si **YA pertenece**, lo ignoramos porque es un duplicado.",
+    "examTrap": "⚠️ **Trampa de Parcial:**\nIntentar vaciar el conjunto al final en la cola. Si hacés eso, **perdés el orden FIFO original**, porque el método `Elegir()` de Conjuntos NO garantiza ningún orden. La cola resultado debe armarse durante el filtrado.",
+    "bigO": "⏱️ **Costo:**\n* **Tiempo:** $O(n \\cdot \\text{costo}(Pertenece))$: en arreglos dinámicos/estáticos de cátedra es $O(n^2)$.\n* **Espacio:** $O(n)$ para el conjunto de vistos y la nueva cola.",
+    "code": "public static ColaTDA eliminarDuplicados(ColaTDA c) {\n    ColaTDA copia = copiarCola(c); // Preservar c intacta\n    ColaTDA resultado = new ColaPU();\n    resultado.InicializarCola();\n\n    ConjuntoTDA vistos = new ConjuntoTA();\n    vistos.InicializarConjunto();\n\n    while (!copia.ColaVacia()) {\n        int x = copia.Primero();\n        if (!vistos.Pertenece(x)) {\n            vistos.Agregar(x);\n            resultado.Acolar(x);\n        }\n        copia.Desacolar();\n    }\n\n    return resultado;\n}",
+    "sim": {
+      "type": "queue_set",
+      "initial": {
+        "s1": {
+          "label": "Cola Entrada",
+          "items": [
+            4,
+            2,
+            4,
+            9,
+            2
+          ]
+        },
+        "s2": {
+          "label": "Conjunto Vistos",
+          "items": []
+        },
+        "s3": {
+          "label": "Cola Resultado",
+          "items": []
+        }
+      },
+      "steps": [
+        {
+          "codeLine": 10,
+          "msg": "Primero es 4. No está en vistos. Lo agregamos a vistos y a resultado.",
+          "s1": [
+            2,
+            4,
+            9,
+            2
+          ],
+          "s2": [
+            4
+          ],
+          "s3": [
+            4
+          ]
+        },
+        {
+          "codeLine": 10,
+          "msg": "Primero es 2. No está en vistos. Lo agregamos a vistos y a resultado.",
+          "s1": [
+            4,
+            9,
+            2
+          ],
+          "s2": [
+            4,
+            2
+          ],
+          "s3": [
+            4,
+            2
+          ]
+        },
+        {
+          "codeLine": 11,
+          "msg": "Primero es 4. ¡Ya está en vistos! Es duplicado: se descarta.",
+          "s1": [
+            9,
+            2
+          ],
+          "s2": [
+            4,
+            2
+          ],
+          "s3": [
+            4,
+            2
+          ]
+        },
+        {
+          "codeLine": 10,
+          "msg": "Primero es 9. No está en vistos. Lo agregamos.",
+          "s1": [
+            2
+          ],
+          "s2": [
+            4,
+            2,
+            9
+          ],
+          "s3": [
+            4,
+            2,
+            9
+          ]
+        },
+        {
+          "codeLine": 11,
+          "msg": "Primero es 2. ¡Ya está en vistos! Se descarta.",
+          "s1": [],
+          "s2": [
+            4,
+            2,
+            9
+          ],
+          "s3": [
+            4,
+            2,
+            9
+          ]
+        },
+        {
+          "codeLine": 19,
+          "msg": "Resultado final: [4, 2, 9] sin duplicados y en orden.",
+          "s1": [],
+          "s2": [
+            4,
+            2,
+            9
+          ],
+          "s3": [
+            4,
+            2,
+            9
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "E11",
+    "cat": "combinados",
+    "catLabel": "Conjuntos Puros",
+    "difficulty": "Intermedio",
+    "title": "Intersección de Conjuntos con Operaciones TDA",
+    "tag": "Álgebra de Conjuntos",
+    "summary": "Hallar los elementos comunes entre dos conjuntos usando exclusivamente la interfaz pública del TDA.",
+    "mision": "Escribir un método que reciba dos ConjuntoTDA A y B y devuelva un nuevo ConjuntoTDA con la intersección (A ∩ B) sin destruir ni A ni B.",
+    "mentalClick": "💡 **El Click Mental:**\nEn el TDA Conjunto, para iterar elementos sólo existe el método `Elegir()` y `Sacar()`.\nPara no destruir el conjunto A:\n1. Clonamos el conjunto A.\n2. Mientras la copia no esté vacía: sacamos un elemento con `Elegir()` y `Sacar()`.\n3. Verificamos si `B.Pertenece(x)`. Si está, `resultado.Agregar(x)`.",
+    "examTrap": "⚠️ **Trampa de Parcial:**\nLlamar a `copia.Elegir()` en un bucle sin hacer `copia.Sacar(x)`. Como `Elegir()` no elimina el elemento, ¡caerías en un **bucle infinito**!",
+    "bigO": "⏱️ **Costo:**\n* **Tiempo:** $O(|A| \\cdot \\text{costo}(Pertenece))$.\n* **Espacio:** $O(|A| + |B|)$.",
+    "code": "// Clona un conjunto para poder iterarlo de forma no destructiva\npublic static ConjuntoTDA copiarConjunto(ConjuntoTDA c) {\n    ConjuntoTDA copia = new ConjuntoTA();\n    copia.InicializarConjunto();\n    ConjuntoTDA aux = new ConjuntoTA();\n    aux.InicializarConjunto();\n\n    while (!c.ConjuntoVacio()) {\n        int x = c.Elegir();\n        copia.Agregar(x);\n        aux.Agregar(x);\n        c.Sacar(x);\n    }\n    while (!aux.ConjuntoVacio()) {\n        int x = aux.Elegir();\n        c.Agregar(x);\n        aux.Sacar(x);\n    }\n    return copia;\n}\n\npublic static ConjuntoTDA interseccion(ConjuntoTDA a, ConjuntoTDA b) {\n    ConjuntoTDA copiaA = copiarConjunto(a);\n    ConjuntoTDA res = new ConjuntoTA();\n    res.InicializarConjunto();\n\n    while (!copiaA.ConjuntoVacio()) {\n        int x = copiaA.Elegir();\n        if (b.Pertenece(x)) {\n            res.Agregar(x);\n        }\n        copiaA.Sacar(x); // ¡Fundamental para avanzar!\n    }\n\n    return res;\n}",
+    "sim": {
+      "type": "sets",
+      "initial": {
+        "s1": {
+          "label": "Conjunto A",
+          "items": [
+            3,
+            8,
+            15
+          ]
+        },
+        "s2": {
+          "label": "Conjunto B",
+          "items": [
+            8,
+            15,
+            22
+          ]
+        },
+        "s3": {
+          "label": "Intersección (A ∩ B)",
+          "items": []
+        }
+      },
+      "steps": [
+        {
+          "codeLine": 27,
+          "msg": "Elegimos 3 de A. ¿Pertenece a B [8, 15, 22]? No. Lo descartamos.",
+          "s1": [
+            8,
+            15
+          ],
+          "s2": [
+            8,
+            15,
+            22
+          ],
+          "s3": []
+        },
+        {
+          "codeLine": 28,
+          "msg": "Elegimos 8 de A. ¿Pertenece a B? ¡Sí! Lo agregamos al resultado.",
+          "s1": [
+            15
+          ],
+          "s2": [
+            8,
+            15,
+            22
+          ],
+          "s3": [
+            8
+          ]
+        },
+        {
+          "codeLine": 28,
+          "msg": "Elegimos 15 de A. ¿Pertenece a B? ¡Sí! Lo agregamos al resultado.",
+          "s1": [],
+          "s2": [
+            8,
+            15,
+            22
+          ],
+          "s3": [
+            8,
+            15
+          ]
+        },
+        {
+          "codeLine": 34,
+          "msg": "¡Finalizado! Intersección resultante: {8, 15}.",
+          "s1": [],
+          "s2": [
+            8,
+            15,
+            22
+          ],
+          "s3": [
+            8,
+            15
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "E12",
+    "cat": "combinados",
+    "catLabel": "Conjuntos Puros",
+    "difficulty": "Intermedio",
+    "title": "Verificar Inclusión de Subconjunto (A ⊆ B)",
+    "tag": "Relaciones de Inclusión",
+    "summary": "Determinar si todos los elementos de un conjunto A están presentes en el conjunto B.",
+    "mision": "Retornar true si A está incluido en B (A ⊆ B). Manejar el caso de conjunto vacío (el conjunto vacío es subconjunto de cualquier conjunto).",
+    "mentalClick": "💡 **El Click Mental:**\nPara que $A \\subseteq B$, **cada elemento** de $A$ debe estar en $B$.\n* Si encontramos tan solo **un elemento** de $A$ que no pertenezca a $B$, ¡ya podemos retornar `false` inmediatamente (cortocircuito)!\n* Si logramos revisar todos los elementos de $A$ y todos pertenecían a $B$, retornamos `true`.",
+    "examTrap": "⚠️ **Trampa de Parcial:**\nDestruir $A$ en el proceso de revisión. Siempre cloná $A$ antes de desarmarlo con `Elegir()` y `Sacar()`.",
+    "bigO": "⏱️ **Costo:**\n* **Tiempo:** $O(|A| \\cdot \\text{costo}(Pertenece))$ en el peor caso.\n* **Espacio:** $O(|A|)$ para la copia auxiliar.",
+    "code": "public static boolean esSubconjunto(ConjuntoTDA a, ConjuntoTDA b) {\n    ConjuntoTDA copiaA = copiarConjunto(a);\n\n    while (!copiaA.ConjuntoVacio()) {\n        int elem = copiaA.Elegir();\n        if (!b.Pertenece(elem)) {\n            return false; // Encontramos un contraejemplo\n        }\n        copiaA.Sacar(elem);\n    }\n\n    return true; // Todos los elementos de A pertenecen a B\n}",
+    "sim": {
+      "type": "sets",
+      "initial": {
+        "s1": {
+          "label": "Subconjunto A",
+          "items": [
+            5,
+            12
+          ]
+        },
+        "s2": {
+          "label": "Superconjunto B",
+          "items": [
+            5,
+            9,
+            12,
+            18
+          ]
+        }
+      },
+      "steps": [
+        {
+          "codeLine": 5,
+          "msg": "Revisamos elemento 5 de A: pertenece a B? Sí.",
+          "s1": [
+            12
+          ],
+          "s2": [
+            5,
+            9,
+            12,
+            18
+          ]
+        },
+        {
+          "codeLine": 5,
+          "msg": "Revisamos elemento 12 de A: pertenece a B? Sí.",
+          "s1": [],
+          "s2": [
+            5,
+            9,
+            12,
+            18
+          ]
+        },
+        {
+          "codeLine": 11,
+          "msg": "Copia de A vacía sin contraejemplos. Retorna true: A ⊆ B.",
+          "s1": [],
+          "s2": [
+            5,
+            9,
+            12,
+            18
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "E13",
+    "cat": "combinados",
+    "catLabel": "Conjuntos Puros",
+    "difficulty": "Combinado",
+    "title": "Diferencia Simétrica entre Conjuntos (A Δ B)",
+    "tag": "Álgebra de Conjuntos",
+    "summary": "Crear un nuevo conjunto con los elementos que pertenecen a A o a B, pero no a ambos a la vez.",
+    "mision": "Calcular la diferencia simétrica: $(A \\setminus B) \\cup (B \\setminus A)$ utilizando la combinación de métodos de TDA.",
+    "mentalClick": "💡 **El Click Mental:**\nPiensa en el diagrama de Venn: la diferencia simétrica son las dos 'lunas' laterales, quitando la lenteja del centro (la intersección).\n1. Elementos de $A$ que no están en $B$.\n2. Elementos de $B$ que no están en $A$.\nUnimos ambos resultados en un solo conjunto.",
+    "examTrap": "⚠️ **Trampa de Parcial:**\nOlvidar que los conjuntos no admiten duplicados por definición: si un elemento ya está, `Agregar()` no debe fallar, pero asegurate de no agregar elementos de la intersección.",
+    "bigO": "⏱️ **Costo:**\n* **Tiempo:** $O((|A| + |B|) \\cdot \\text{costo}(Pertenece))$.\n* **Espacio:** $O(|A| + |B|)$.",
+    "code": "public static ConjuntoTDA diferenciaSimetrica(ConjuntoTDA a, ConjuntoTDA b) {\n    ConjuntoTDA res = new ConjuntoTA();\n    res.InicializarConjunto();\n\n    ConjuntoTDA cpA = copiarConjunto(a);\n    while (!cpA.ConjuntoVacio()) {\n        int x = cpA.Elegir();\n        if (!b.Pertenece(x)) {\n            res.Agregar(x);\n        }\n        cpA.Sacar(x);\n    }\n\n    ConjuntoTDA cpB = copiarConjunto(b);\n    while (!cpB.ConjuntoVacio()) {\n        int y = cpB.Elegir();\n        if (!a.Pertenece(y)) {\n            res.Agregar(y);\n        }\n        cpB.Sacar(y);\n    }\n\n    return res;\n}",
+    "sim": {
+      "type": "sets",
+      "initial": {
+        "s1": {
+          "label": "Conjunto A",
+          "items": [
+            1,
+            2,
+            3
+          ]
+        },
+        "s2": {
+          "label": "Conjunto B",
+          "items": [
+            2,
+            3,
+            4
+          ]
+        },
+        "s3": {
+          "label": "Diferencia Simétrica (A Δ B)",
+          "items": []
+        }
+      },
+      "steps": [
+        {
+          "codeLine": 8,
+          "msg": "De A: 1 no está en B ➔ agregamos 1 a resultado.",
+          "s1": [
+            2,
+            3
+          ],
+          "s2": [
+            2,
+            3,
+            4
+          ],
+          "s3": [
+            1
+          ]
+        },
+        {
+          "codeLine": 8,
+          "msg": "De A: 2 y 3 sí están en B ➔ se ignoran.",
+          "s1": [],
+          "s2": [
+            2,
+            3,
+            4
+          ],
+          "s3": [
+            1
+          ]
+        },
+        {
+          "codeLine": 18,
+          "msg": "De B: 4 no está en A ➔ agregamos 4 a resultado.",
+          "s1": [],
+          "s2": [],
+          "s3": [
+            1,
+            4
+          ]
+        },
+        {
+          "codeLine": 23,
+          "msg": "Resultado final: {1, 4}.",
+          "s1": [],
+          "s2": [],
+          "s3": [
+            1,
+            4
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "E14",
+    "cat": "diccionarios",
+    "catLabel": "Diccionarios",
+    "difficulty": "Parcial Clave",
+    "title": "Histograma de Frecuencias (Diccionario Simple)",
+    "tag": "Conteo y Frecuencias",
+    "summary": "Contar cuántas veces se repite cada número de una secuencia usando DiccionarioSimpleTDA.",
+    "mision": "Dada una ColaTDA de enteros, retornar un DiccionarioSimpleTDA donde cada clave sea un número único y su valor sea la cantidad de veces que apareció en la cola.",
+    "mentalClick": "💡 **El Click Mental:**\nUn Diccionario Simple asocia una **Clave Única** con un **Valor Único** (`Clave ➔ Valor`).\nPara contar frecuencias:\n* Por cada número $x$ que sacamos de la cola:\n  * Si $x$ **no existe** como clave en el diccionario: `dic.Agregar(x, 1)`.\n  * Si $x$ **ya existe**: leemos el valor actual con `dic.Recuperar(x)`, y volvemos a guardar con la cuenta incrementada: `dic.Agregar(x, actual + 1)`.",
+    "examTrap": "⚠️ **Trampa de Parcial:**\nLlamar a `dic.Recuperar(x)` sin antes verificar que la clave exista con `dic.Claves().Pertenece(x)`. Si la clave no existe, `Recuperar` viola la precondición del TDA y lanza excepción.",
+    "bigO": "⏱️ **Costo:**\n* **Tiempo:** $O(n \\cdot \\text{costo}(Pertenece + Agregar))$.\n* **Espacio:** $O(U)$ donde $U$ es la cantidad de elementos únicos.",
+    "code": "public static DiccionarioSimpleTDA histogramaFrecuencias(ColaTDA c) {\n    ColaTDA copia = copiarCola(c);\n    DiccionarioSimpleTDA dic = new DicSimpleA();\n    dic.InicializarDiccionario();\n\n    while (!copia.ColaVacia()) {\n        int x = copia.Primero();\n        if (dic.Claves().Pertenece(x)) {\n            int cuenta = dic.Recuperar(x);\n            dic.Agregar(x, cuenta + 1); // Sobrescribe el valor en dic simple\n        } else {\n            dic.Agregar(x, 1);\n        }\n        copia.Desacolar();\n    }\n\n    return dic;\n}",
+    "sim": {
+      "type": "dict",
+      "initial": {
+        "s1": {
+          "label": "Cola Entrada",
+          "items": [
+            7,
+            3,
+            7,
+            7,
+            3
+          ]
+        },
+        "s2": {
+          "label": "Diccionario [Clave ➔ Frecuencia]",
+          "entries": []
+        }
+      },
+      "steps": [
+        {
+          "codeLine": 12,
+          "msg": "Primero: 7. Clave 7 no existe: Agregar(7, 1).",
+          "s1": [
+            3,
+            7,
+            7,
+            3
+          ],
+          "s2": [
+            {
+              "k": 7,
+              "v": 1
+            }
+          ]
+        },
+        {
+          "codeLine": 12,
+          "msg": "Primero: 3. Clave 3 no existe: Agregar(3, 1).",
+          "s1": [
+            7,
+            7,
+            3
+          ],
+          "s2": [
+            {
+              "k": 7,
+              "v": 1
+            },
+            {
+              "k": 3,
+              "v": 1
+            }
+          ]
+        },
+        {
+          "codeLine": 10,
+          "msg": "Primero: 7. Ya existe con valor 1: Agregar(7, 2).",
+          "s1": [
+            7,
+            3
+          ],
+          "s2": [
+            {
+              "k": 7,
+              "v": 2
+            },
+            {
+              "k": 3,
+              "v": 1
+            }
+          ]
+        },
+        {
+          "codeLine": 10,
+          "msg": "Primero: 7. Ya existe con valor 2: Agregar(7, 3).",
+          "s1": [
+            3
+          ],
+          "s2": [
+            {
+              "k": 7,
+              "v": 3
+            },
+            {
+              "k": 3,
+              "v": 1
+            }
+          ]
+        },
+        {
+          "codeLine": 10,
+          "msg": "Primero: 3. Ya existe con valor 1: Agregar(3, 2).",
+          "s1": [],
+          "s2": [
+            {
+              "k": 7,
+              "v": 3
+            },
+            {
+              "k": 3,
+              "v": 2
+            }
+          ]
+        },
+        {
+          "codeLine": 17,
+          "msg": "Resultado: {7 ➔ 3 veces, 3 ➔ 2 veces}.",
+          "s1": [],
+          "s2": [
+            {
+              "k": 7,
+              "v": 3
+            },
+            {
+              "k": 3,
+              "v": 2
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "E15",
+    "cat": "diccionarios",
+    "catLabel": "Diccionarios",
+    "difficulty": "Parcial Clave",
+    "title": "Agrupar por Paridad (Diccionario Múltiple)",
+    "tag": "Clasificación en Buckets",
+    "summary": "Clasificar números en dos grupos ('Pares' clave 0, 'Impares' clave 1) con DiccionarioMultipleTDA.",
+    "mision": "Dado un conjunto o cola de números enteros, agruparlos dentro de un DiccionarioMultipleTDA según su paridad (clave 0: pares, clave 1: impares).",
+    "mentalClick": "💡 **El Click Mental:**\nUn Diccionario Múltiple permite asociar **múltiples valores** a una misma clave (`Clave ➔ {val1, val2, val3}`).\n* Para cada número $x$:\n* Calculamos su clave de bucket: `int clave = Math.abs(x % 2)`.\n* Hacemos `dic.Agregar(clave, x)`. ¡El TDA se encarga automáticamente de ir sumando los valores al conjunto de esa clave sin duplicados!",
+    "examTrap": "⚠️ **Trampa de Parcial:**\nLos números negativos en Java: `-3 % 2` da `-1`. Para evitar claves negativas no deseadas, usa `Math.abs(x % 2)` para garantizar que la clave sea 0 o 1.",
+    "bigO": "⏱️ **Costo:**\n* **Tiempo:** $O(n \\cdot \\text{costo}(Agregar))$.\n* **Espacio:** $O(n)$ para almacenar los $n$ números distribuidos en las 2 claves.",
+    "code": "public static DiccionarioMultipleTDA agruparPorParidad(ColaTDA c) {\n    ColaTDA copia = copiarCola(c);\n    DiccionarioMultipleTDA dic = new DicMultipleA();\n    dic.InicializarDiccionario();\n\n    while (!copia.ColaVacia()) {\n        int x = copia.Primero();\n        int clave = Math.abs(x % 2); // 0 para pares, 1 para impares\n        dic.Agregar(clave, x);\n        copia.Desacolar();\n    }\n\n    return dic;\n}",
+    "sim": {
+      "type": "dict_multi",
+      "initial": {
+        "s1": {
+          "label": "Cola Entrada",
+          "items": [
+            4,
+            7,
+            12,
+            15,
+            8
+          ]
+        },
+        "s2": {
+          "label": "Diccionario Múltiple",
+          "entries": []
+        }
+      },
+      "steps": [
+        {
+          "codeLine": 9,
+          "msg": "4 % 2 = 0 (Par) ➔ dic.Agregar(0, 4).",
+          "s1": [
+            7,
+            12,
+            15,
+            8
+          ],
+          "s2": [
+            {
+              "k": 0,
+              "v": [
+                4
+              ]
+            }
+          ]
+        },
+        {
+          "codeLine": 9,
+          "msg": "7 % 2 = 1 (Impar) ➔ dic.Agregar(1, 7).",
+          "s1": [
+            12,
+            15,
+            8
+          ],
+          "s2": [
+            {
+              "k": 0,
+              "v": [
+                4
+              ]
+            },
+            {
+              "k": 1,
+              "v": [
+                7
+              ]
+            }
+          ]
+        },
+        {
+          "codeLine": 9,
+          "msg": "12 % 2 = 0 (Par) ➔ dic.Agregar(0, 12).",
+          "s1": [
+            15,
+            8
+          ],
+          "s2": [
+            {
+              "k": 0,
+              "v": [
+                4,
+                12
+              ]
+            },
+            {
+              "k": 1,
+              "v": [
+                7
+              ]
+            }
+          ]
+        },
+        {
+          "codeLine": 9,
+          "msg": "15 % 2 = 1 (Impar) ➔ dic.Agregar(1, 15).",
+          "s1": [
+            8
+          ],
+          "s2": [
+            {
+              "k": 0,
+              "v": [
+                4,
+                12
+              ]
+            },
+            {
+              "k": 1,
+              "v": [
+                7,
+                15
+              ]
+            }
+          ]
+        },
+        {
+          "codeLine": 9,
+          "msg": "8 % 2 = 0 (Par) ➔ dic.Agregar(0, 8).",
+          "s1": [],
+          "s2": [
+            {
+              "k": 0,
+              "v": [
+                4,
+                12,
+                8
+              ]
+            },
+            {
+              "k": 1,
+              "v": [
+                7,
+                15
+              ]
+            }
+          ]
+        },
+        {
+          "codeLine": 14,
+          "msg": "Listo: Clave 0 (Pares) = {4, 12, 8}, Clave 1 (Impares) = {7, 15}.",
+          "s1": [],
+          "s2": [
+            {
+              "k": 0,
+              "v": [
+                4,
+                12,
+                8
+              ]
+            },
+            {
+              "k": 1,
+              "v": [
+                7,
+                15
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "E16",
+    "cat": "diccionarios",
+    "catLabel": "Diccionarios",
+    "difficulty": "Intermedio",
+    "title": "Clave con Mayor Cantidad de Valores",
+    "tag": "Auditoría de Mapas",
+    "summary": "Encontrar cuál clave de un DiccionarioMultipleTDA contiene la lista más poblada de valores.",
+    "mision": "Dado un DiccionarioMultipleTDA no vacío, retornar la clave que tenga asociada la mayor cantidad de valores en su conjunto.",
+    "mentalClick": "💡 **El Click Mental:**\n1. Obtenemos el conjunto de claves con `dic.Claves()`.\n2. Iteramos cada clave:\n   * Recuperamos su conjunto de valores con `ConjuntoTDA valores = dic.Recuperar(k)`.\n   * Contamos cuántos elementos tiene ese conjunto auxiliar.\n   * Si supera el máximo registrado hasta ahora, actualizamos `maxClave` y `maxCantidad`.",
+    "examTrap": "⚠️ **Trampa de Parcial:**\nOlvidar inicializar `maxClave` con la primera clave existente o asumir que el diccionario tiene claves positivas. Siempre inicializa las variables de máximo con el primer elemento real.",
+    "bigO": "⏱️ **Costo:**\n* **Tiempo:** $O(K \\cdot V)$ donde $K$ es el número de claves y $V$ el promedio de valores por clave.\n* **Espacio:** $O(V)$ para clonar el conjunto de valores.",
+    "code": "public static int claveConMasValores(DiccionarioMultipleTDA dic) {\n    ConjuntoTDA claves = dic.Claves();\n    ConjuntoTDA cpClaves = copiarConjunto(claves);\n\n    int maxClave = 0;\n    int maxCantidad = -1;\n\n    while (!cpClaves.ConjuntoVacio()) {\n        int k = cpClaves.Elegir();\n        ConjuntoTDA valores = dic.Recuperar(k);\n        int cantValores = contarElementosConjunto(valores);\n\n        if (cantValores > maxCantidad) {\n            maxCantidad = cantValores;\n            maxClave = k;\n        }\n\n        cpClaves.Sacar(k);\n    }\n\n    return maxClave;\n}",
+    "sim": {
+      "type": "dict_multi",
+      "initial": {
+        "s1": {
+          "label": "Diccionario Múltiple",
+          "entries": [
+            {
+              "k": 10,
+              "v": [
+                1,
+                2
+              ]
+            },
+            {
+              "k": 20,
+              "v": [
+                5,
+                6,
+                7,
+                8
+              ]
+            },
+            {
+              "k": 30,
+              "v": [
+                9
+              ]
+            }
+          ]
+        }
+      },
+      "steps": [
+        {
+          "codeLine": 10,
+          "msg": "Evaluamos Clave 10: tiene 2 valores. Nuevo max = 10 (cant = 2).",
+          "s1": [
+            {
+              "k": 10,
+              "v": [
+                1,
+                2
+              ]
+            },
+            {
+              "k": 20,
+              "v": [
+                5,
+                6,
+                7,
+                8
+              ]
+            },
+            {
+              "k": 30,
+              "v": [
+                9
+              ]
+            }
+          ]
+        },
+        {
+          "codeLine": 14,
+          "msg": "Evaluamos Clave 20: tiene 4 valores. 4 > 2 ➔ Nuevo max = 20 (cant = 4).",
+          "s1": [
+            {
+              "k": 10,
+              "v": [
+                1,
+                2
+              ]
+            },
+            {
+              "k": 20,
+              "v": [
+                5,
+                6,
+                7,
+                8
+              ]
+            },
+            {
+              "k": 30,
+              "v": [
+                9
+              ]
+            }
+          ]
+        },
+        {
+          "codeLine": 10,
+          "msg": "Evaluamos Clave 30: tiene 1 valor. 1 < 4 ➔ Max se mantiene en 20.",
+          "s1": [
+            {
+              "k": 10,
+              "v": [
+                1,
+                2
+              ]
+            },
+            {
+              "k": 20,
+              "v": [
+                5,
+                6,
+                7,
+                8
+              ]
+            },
+            {
+              "k": 30,
+              "v": [
+                9
+              ]
+            }
+          ]
+        },
+        {
+          "codeLine": 21,
+          "msg": "Fin del recorrido: Retorna clave 20 con 4 valores.",
+          "s1": [
+            {
+              "k": 10,
+              "v": [
+                1,
+                2
+              ]
+            },
+            {
+              "k": 20,
+              "v": [
+                5,
+                6,
+                7,
+                8
+              ]
+            },
+            {
+              "k": 30,
+              "v": [
+                9
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "E17",
+    "cat": "diccionarios",
+    "catLabel": "Diccionarios",
+    "difficulty": "Combinado",
+    "title": "Invertir Diccionario Simple (Biyectivo)",
+    "tag": "Inversión de Mapas",
+    "summary": "Intercambiar claves por valores en un DiccionarioSimpleTDA (asumiendo valores únicos).",
+    "mision": "Dado un DiccionarioSimpleTDA biyectivo (cada clave tiene un valor distinto), crear un nuevo diccionario donde los valores de origen sean las claves y las claves sean los valores.",
+    "mentalClick": "💡 **El Click Mental:**\nSi en el diccionario original teníamos:\n`DNI ➔ Legajo (ej: 40123456 ➔ 1092)`\nEl diccionario invertido tendrá:\n`Legajo ➔ DNI (ej: 1092 ➔ 40123456)`\nRecorremos todas las claves de origen, leemos su valor `v = dic.Recuperar(k)`, y en el nuevo hacemos `invertido.Agregar(v, k)`.",
+    "examTrap": "⚠️ **Trampa de Parcial:**\nSi el diccionario no fuera biyectivo (dos claves tuvieran el mismo valor), una sobrescribiría a la otra. Si el profesor pide soportar colisiones, debes usar un `DiccionarioMultipleTDA` para la versión invertida.",
+    "bigO": "⏱️ **Costo:**\n* **Tiempo:** $O(K \\cdot \\text{costo}(Agregar))$.\n* **Espacio:** $O(K)$ para el nuevo diccionario.",
+    "code": "public static DiccionarioSimpleTDA invertirDiccionario(DiccionarioSimpleTDA dic) {\n    DiccionarioSimpleTDA inv = new DicSimpleA();\n    inv.InicializarDiccionario();\n\n    ConjuntoTDA claves = copiarConjunto(dic.Claves());\n    while (!claves.ConjuntoVacio()) {\n        int k = claves.Elegir();\n        int v = dic.Recuperar(k);\n        inv.Agregar(v, k); // El valor pasa a ser clave, la clave pasa a valor\n        claves.Sacar(k);\n    }\n\n    return inv;\n}",
+    "sim": {
+      "type": "dict",
+      "initial": {
+        "s1": {
+          "label": "Diccionario Origen [k ➔ v]",
+          "entries": [
+            {
+              "k": 1,
+              "v": 100
+            },
+            {
+              "k": 2,
+              "v": 200
+            }
+          ]
+        },
+        "s2": {
+          "label": "Diccionario Invertido [v ➔ k]",
+          "entries": []
+        }
+      },
+      "steps": [
+        {
+          "codeLine": 8,
+          "msg": "Clave 1 con valor 100 ➔ inv.Agregar(100, 1).",
+          "s1": [
+            {
+              "k": 1,
+              "v": 100
+            },
+            {
+              "k": 2,
+              "v": 200
+            }
+          ],
+          "s2": [
+            {
+              "k": 100,
+              "v": 1
+            }
+          ]
+        },
+        {
+          "codeLine": 8,
+          "msg": "Clave 2 con valor 200 ➔ inv.Agregar(200, 2).",
+          "s1": [
+            {
+              "k": 1,
+              "v": 100
+            },
+            {
+              "k": 2,
+              "v": 200
+            }
+          ],
+          "s2": [
+            {
+              "k": 100,
+              "v": 1
+            },
+            {
+              "k": 200,
+              "v": 2
+            }
+          ]
+        },
+        {
+          "codeLine": 13,
+          "msg": "Listo: Claves y valores completamente intercambiados.",
+          "s1": [
+            {
+              "k": 1,
+              "v": 100
+            },
+            {
+              "k": 2,
+              "v": 200
+            }
+          ],
+          "s2": [
+            {
+              "k": 100,
+              "v": 1
+            },
+            {
+              "k": 200,
+              "v": 2
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "E18",
+    "cat": "nodos",
+    "catLabel": "Memoria Dinámica & Nodos",
+    "difficulty": "Básico Clave",
+    "title": "Recorrido Sagrado de Lista Enlazada",
+    "tag": "Punteros y Memoria",
+    "summary": "El bucle universal 'while (act != null)' para recorrer listas de nodos y calcular longitud y suma.",
+    "mision": "Dado el puntero inicial 'primero' de una lista simplemente enlazada de objetos Nodo (con campos 'info' y 'sig'), calcular la suma de sus elementos y el tamaño total sin perder la referencia a la cabeza.",
+    "mentalClick": "💡 **El Click Mental:**\nUna lista enlazada es como una fila de personas donde cada una sólo conoce a la persona de atrás (su puntero `sig`).\nPara recorrerla sin perder dónde empieza:\n* Creamos un puntero viajero: `Nodo act = primero;`.\n* Avanzamos paso a paso: `act = act.sig;`.\n* El final de la lista siempre se reconoce porque el último apunta a `null`.",
+    "examTrap": "⚠️ **Trampa de Parcial mortal:**\nHacer `primero = primero.sig` dentro del bucle. Si modificás `primero`, **¡destruiste la lista para siempre!** En Java el Garbage Collector borrará de la memoria todos los nodos anteriores porque perdiste la cabeza. Siempre usa una variable auxiliar `act`.",
+    "bigO": "⏱️ **Costo:**\n* **Tiempo:** $O(n)$ — Visita exactamente una vez cada nodo.\n* **Espacio:** $O(1)$ — Memoria constante, solo 1 puntero auxiliar.",
+    "code": "// Clase oficial de Nodo en cátedra\nclass Nodo {\n    int info;\n    Nodo sig;\n}\n\npublic static int sumaLista(Nodo primero) {\n    int suma = 0;\n    Nodo act = primero; // ¡Puntero viajero para no destruir primero!\n\n    while (act != null) {\n        suma += act.info;\n        act = act.sig;  // Salto al siguiente nodo en la memoria RAM\n    }\n\n    return suma;\n}",
+    "sim": {
+      "type": "nodes",
+      "initial": {
+        "nodes": [
+          {
+            "id": 1,
+            "val": 10,
+            "sig": 2
+          },
+          {
+            "id": 2,
+            "val": 25,
+            "sig": 3
+          },
+          {
+            "id": 3,
+            "val": 40,
+            "sig": null
+          }
+        ],
+        "pointers": [
+          {
+            "name": "primero",
+            "nodeId": 1
+          },
+          {
+            "name": "act",
+            "nodeId": 1
+          }
+        ]
+      },
+      "steps": [
+        {
+          "codeLine": 8,
+          "msg": "Inicio: 'primero' y 'act' apuntan al nodo 10. Suma = 0.",
+          "nodes": [
+            {
+              "id": 1,
+              "val": 10,
+              "sig": 2
+            },
+            {
+              "id": 2,
+              "val": 25,
+              "sig": 3
+            },
+            {
+              "id": 3,
+              "val": 40,
+              "sig": null
+            }
+          ],
+          "pointers": [
+            {
+              "name": "primero",
+              "nodeId": 1
+            },
+            {
+              "name": "act",
+              "nodeId": 1
+            }
+          ]
+        },
+        {
+          "codeLine": 12,
+          "msg": "act.info = 10 ➔ Suma = 10. Avanzamos: act = act.sig (apunta a 25).",
+          "nodes": [
+            {
+              "id": 1,
+              "val": 10,
+              "sig": 2
+            },
+            {
+              "id": 2,
+              "val": 25,
+              "sig": 3
+            },
+            {
+              "id": 3,
+              "val": 40,
+              "sig": null
+            }
+          ],
+          "pointers": [
+            {
+              "name": "primero",
+              "nodeId": 1
+            },
+            {
+              "name": "act",
+              "nodeId": 2
+            }
+          ]
+        },
+        {
+          "codeLine": 12,
+          "msg": "act.info = 25 ➔ Suma = 35. Avanzamos: act = act.sig (apunta a 40).",
+          "nodes": [
+            {
+              "id": 1,
+              "val": 10,
+              "sig": 2
+            },
+            {
+              "id": 2,
+              "val": 25,
+              "sig": 3
+            },
+            {
+              "id": 3,
+              "val": 40,
+              "sig": null
+            }
+          ],
+          "pointers": [
+            {
+              "name": "primero",
+              "nodeId": 1
+            },
+            {
+              "name": "act",
+              "nodeId": 3
+            }
+          ]
+        },
+        {
+          "codeLine": 12,
+          "msg": "act.info = 40 ➔ Suma = 75. Avanzamos: act = act.sig ➔ act es null.",
+          "nodes": [
+            {
+              "id": 1,
+              "val": 10,
+              "sig": 2
+            },
+            {
+              "id": 2,
+              "val": 25,
+              "sig": 3
+            },
+            {
+              "id": 3,
+              "val": 40,
+              "sig": null
+            }
+          ],
+          "pointers": [
+            {
+              "name": "primero",
+              "nodeId": 1
+            },
+            {
+              "name": "act",
+              "nodeId": null
+            }
+          ]
+        },
+        {
+          "codeLine": 15,
+          "msg": "Bucle termina (act == null). Retorna suma = 75. 'primero' quedó intacto.",
+          "nodes": [
+            {
+              "id": 1,
+              "val": 10,
+              "sig": 2
+            },
+            {
+              "id": 2,
+              "val": 25,
+              "sig": 3
+            },
+            {
+              "id": 3,
+              "val": 40,
+              "sig": null
+            }
+          ],
+          "pointers": [
+            {
+              "name": "primero",
+              "nodeId": 1
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "E19",
+    "cat": "nodos",
+    "catLabel": "Memoria Dinámica & Nodos",
+    "difficulty": "Parcial Clave",
+    "title": "Inserción Ordenada en Lista de Nodos",
+    "tag": "Reconexión de Punteros",
+    "summary": "Insertar un nuevo nodo en una lista enlazada preservando el orden ascendente.",
+    "mision": "Dado un entero 'x' y la cabeza 'primero' de una lista ordenada, insertar 'x' en la posición correspondiente reconectando los punteros 'sig'.",
+    "mentalClick": "💡 **El Click Mental:**\nHay solo **dos casos posibles**:\n1. **El nuevo elemento va al principio:** Si la lista está vacía o el nuevo valor es menor que `primero.info`.\n   `nuevo.sig = primero; return nuevo;` (nueva cabeza).\n2. **El nuevo elemento va en el medio o al final:**\n   Caminamos con dos punteros (`ant` y `act`) hasta encontrar el hueco donde `act == null || act.info > x`.\n   Hacemos la costura: `ant.sig = nuevo; nuevo.sig = act;`.",
+    "examTrap": "⚠️ **Trampa de Parcial mortal:**\nHacer la asignación al revés: `nuevo.sig = act; ant.sig = nuevo;`. Si hacés `ant.sig = nuevo` primero y perdiste la referencia a `act`, rompés el tren de memoria y perdiste el resto de la lista.",
+    "bigO": "⏱️ **Costo:**\n* **Tiempo:** $O(n)$ — En el peor caso recorremos toda la lista para insertar al final.\n* **Espacio:** $O(1)$ — Solo creamos el nuevo nodo y punteros auxiliares.",
+    "code": "public static Nodo insertarOrdenado(Nodo primero, int x) {\n    Nodo nuevo = new Nodo();\n    nuevo.info = x;\n\n    // Caso 1: Va al inicio (o lista vacía)\n    if (primero == null || x < primero.info) {\n        nuevo.sig = primero;\n        return nuevo; // Nueva cabeza de la lista\n    }\n\n    // Caso 2: Va en el medio o al final\n    Nodo ant = primero;\n    Nodo act = primero.sig;\n\n    while (act != null && act.info < x) {\n        ant = act;\n        act = act.sig;\n    }\n\n    // Costura de punteros\n    nuevo.sig = act;\n    ant.sig = nuevo;\n\n    return primero; // La cabeza no cambió\n}",
+    "sim": {
+      "type": "nodes",
+      "initial": {
+        "nodes": [
+          {
+            "id": 1,
+            "val": 10,
+            "sig": 3
+          },
+          {
+            "id": 3,
+            "val": 30,
+            "sig": null
+          },
+          {
+            "id": 2,
+            "val": 20,
+            "sig": null
+          }
+        ],
+        "pointers": [
+          {
+            "name": "primero",
+            "nodeId": 1
+          },
+          {
+            "name": "nuevo (x=20)",
+            "nodeId": 2
+          }
+        ]
+      },
+      "steps": [
+        {
+          "codeLine": 5,
+          "msg": "Lista: [10] ➔ [30]. Queremos insertar x = 20 ordenadamente.",
+          "nodes": [
+            {
+              "id": 1,
+              "val": 10,
+              "sig": 3
+            },
+            {
+              "id": 3,
+              "val": 30,
+              "sig": null
+            },
+            {
+              "id": 2,
+              "val": 20,
+              "sig": null
+            }
+          ],
+          "pointers": [
+            {
+              "name": "primero",
+              "nodeId": 1
+            },
+            {
+              "name": "nuevo",
+              "nodeId": 2
+            }
+          ]
+        },
+        {
+          "codeLine": 12,
+          "msg": "ant apunta a 10, act apunta a 30. Comparamos: act.info (30) > 20 ➔ Encontramos el hueco.",
+          "nodes": [
+            {
+              "id": 1,
+              "val": 10,
+              "sig": 3
+            },
+            {
+              "id": 3,
+              "val": 30,
+              "sig": null
+            },
+            {
+              "id": 2,
+              "val": 20,
+              "sig": null
+            }
+          ],
+          "pointers": [
+            {
+              "name": "primero",
+              "nodeId": 1
+            },
+            {
+              "name": "ant",
+              "nodeId": 1
+            },
+            {
+              "name": "act",
+              "nodeId": 3
+            },
+            {
+              "name": "nuevo",
+              "nodeId": 2
+            }
+          ]
+        },
+        {
+          "codeLine": 20,
+          "msg": "Paso 1 de costura: nuevo.sig = act (nuevo 20 apunta a 30).",
+          "nodes": [
+            {
+              "id": 1,
+              "val": 10,
+              "sig": 3
+            },
+            {
+              "id": 2,
+              "val": 20,
+              "sig": 3
+            },
+            {
+              "id": 3,
+              "val": 30,
+              "sig": null
+            }
+          ],
+          "pointers": [
+            {
+              "name": "primero",
+              "nodeId": 1
+            },
+            {
+              "name": "ant",
+              "nodeId": 1
+            },
+            {
+              "name": "act",
+              "nodeId": 3
+            },
+            {
+              "name": "nuevo",
+              "nodeId": 2
+            }
+          ]
+        },
+        {
+          "codeLine": 21,
+          "msg": "Paso 2 de costura: ant.sig = nuevo (nodo 10 apunta a nuevo 20).",
+          "nodes": [
+            {
+              "id": 1,
+              "val": 10,
+              "sig": 2
+            },
+            {
+              "id": 2,
+              "val": 20,
+              "sig": 3
+            },
+            {
+              "id": 3,
+              "val": 30,
+              "sig": null
+            }
+          ],
+          "pointers": [
+            {
+              "name": "primero",
+              "nodeId": 1
+            },
+            {
+              "name": "nuevo",
+              "nodeId": 2
+            }
+          ]
+        },
+        {
+          "codeLine": 23,
+          "msg": "¡Listo! La lista quedó: [10] ➔ [20] ➔ [30].",
+          "nodes": [
+            {
+              "id": 1,
+              "val": 10,
+              "sig": 2
+            },
+            {
+              "id": 2,
+              "val": 20,
+              "sig": 3
+            },
+            {
+              "id": 3,
+              "val": 30,
+              "sig": null
+            }
+          ],
+          "pointers": [
+            {
+              "name": "primero",
+              "nodeId": 1
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "E20",
+    "cat": "nodos",
+    "catLabel": "Memoria Dinámica & Nodos",
+    "difficulty": "Parcial Clave",
+    "title": "Eliminar Nodo con Valor X (Cirugía de Punteros)",
+    "tag": "Reconexión de Punteros",
+    "summary": "Desconectar y eliminar la primera aparición de un valor X en una lista enlazada.",
+    "mision": "Dado un puntero primero y un valor x, desconectar el nodo que contiene x para que sea liberado de memoria, manejando si x está en la cabeza o en el medio.",
+    "mentalClick": "💡 **El Click Mental:**\n* **Si el nodo a borrar es el primero (`primero.info == x`):**\n  La cabeza de la lista se mueve un paso: `primero = primero.sig;`. El viejo primer nodo queda flotando y el Garbage Collector lo destruye.\n* **Si está más adelante:**\n  Buscamos el nodo con `act` recordando quién era `ant`. Cuando lo encontramos:\n  `ant.sig = act.sig;`\n  ¡El nodo anterior 'salta' por encima de `act` y se conecta directamente con el siguiente!",
+    "examTrap": "⚠️ **Trampa de Parcial:**\nNo verificar si `primero == null` al principio. Si la lista está vacía y hacés `primero.info`, tu programa lanza un **NullPointerException** inmediato.",
+    "bigO": "⏱️ **Costo:**\n* **Tiempo:** $O(n)$ — Búsqueda secuencial.\n* **Espacio:** $O(1)$ — No se crea ningún nodo nuevo.",
+    "code": "public static Nodo eliminarNodo(Nodo primero, int x) {\n    if (primero == null) return null;\n\n    // Caso 1: El elemento a eliminar está en la cabeza\n    if (primero.info == x) {\n        return primero.sig; // El segundo pasa a ser la nueva cabeza\n    }\n\n    // Caso 2: El elemento está en el cuerpo de la lista\n    Nodo ant = primero;\n    Nodo act = primero.sig;\n\n    while (act != null && act.info != x) {\n        ant = act;\n        act = act.sig;\n    }\n\n    // Si lo encontramos, bypass quirúrgico\n    if (act != null) {\n        ant.sig = act.sig;\n    }\n\n    return primero;\n}",
+    "sim": {
+      "type": "nodes",
+      "initial": {
+        "nodes": [
+          {
+            "id": 1,
+            "val": 5,
+            "sig": 2
+          },
+          {
+            "id": 2,
+            "val": 99,
+            "sig": 3
+          },
+          {
+            "id": 3,
+            "val": 20,
+            "sig": null
+          }
+        ],
+        "pointers": [
+          {
+            "name": "primero",
+            "nodeId": 1
+          }
+        ]
+      },
+      "steps": [
+        {
+          "codeLine": 5,
+          "msg": "Lista: [5] ➔ [99] ➔ [20]. Buscamos eliminar X = 99.",
+          "nodes": [
+            {
+              "id": 1,
+              "val": 5,
+              "sig": 2
+            },
+            {
+              "id": 2,
+              "val": 99,
+              "sig": 3
+            },
+            {
+              "id": 3,
+              "val": 20,
+              "sig": null
+            }
+          ],
+          "pointers": [
+            {
+              "name": "primero",
+              "nodeId": 1
+            }
+          ]
+        },
+        {
+          "codeLine": 11,
+          "msg": "ant = nodo(5), act = nodo(99). act.info == 99 ➔ ¡Encontrado!",
+          "nodes": [
+            {
+              "id": 1,
+              "val": 5,
+              "sig": 2
+            },
+            {
+              "id": 2,
+              "val": 99,
+              "sig": 3
+            },
+            {
+              "id": 3,
+              "val": 20,
+              "sig": null
+            }
+          ],
+          "pointers": [
+            {
+              "name": "primero",
+              "nodeId": 1
+            },
+            {
+              "name": "ant",
+              "nodeId": 1
+            },
+            {
+              "name": "act",
+              "nodeId": 2
+            }
+          ]
+        },
+        {
+          "codeLine": 19,
+          "msg": "Bypass quirúrgico: ant.sig = act.sig (nodo 5 apunta directo a nodo 20).",
+          "nodes": [
+            {
+              "id": 1,
+              "val": 5,
+              "sig": 3
+            },
+            {
+              "id": 2,
+              "val": 99,
+              "sig": 3,
+              "disconnected": true
+            },
+            {
+              "id": 3,
+              "val": 20,
+              "sig": null
+            }
+          ],
+          "pointers": [
+            {
+              "name": "primero",
+              "nodeId": 1
+            },
+            {
+              "name": "ant",
+              "nodeId": 1
+            }
+          ]
+        },
+        {
+          "codeLine": 22,
+          "msg": "Nodo 99 quedó desconectado. Lista resultante: [5] ➔ [20].",
+          "nodes": [
+            {
+              "id": 1,
+              "val": 5,
+              "sig": 3
+            },
+            {
+              "id": 3,
+              "val": 20,
+              "sig": null
+            }
+          ],
+          "pointers": [
+            {
+              "name": "primero",
+              "nodeId": 1
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "E21",
+    "cat": "nodos",
+    "catLabel": "Memoria Dinámica & Nodos",
+    "difficulty": "Avanzado / Parcial",
+    "title": "Invertir Lista Enlazada In-Situ (Patrón 3 Punteros)",
+    "tag": "Reconexión de Punteros",
+    "summary": "Dar vuelta el sentido de todas las flechas 'sig' en la memoria sin crear nodos nuevos.",
+    "mision": "Invertir una lista de nodos in-situ en tiempo O(n) y memoria auxiliar O(1) modificando exclusivamente las referencias 'sig'.",
+    "mentalClick": "💡 **El Click Mental:**\nImagina 3 punteros marchando al unísono: `prev`, `act` y `sig`.\nEn cada iteración del bucle:\n1. `sig = act.sig;` ➔ Guardamos quién sigue para no perder el resto de la lista.\n2. `act.sig = prev;` ➔ **¡Damos vuelta la flecha!** (ahora apunta hacia atrás).\n3. `prev = act;` ➔ Avanzamos prev.\n4. `act = sig;` ➔ Avanzamos act.\nAl terminar, `prev` apunta a la nueva cabeza (el viejo último nodo).",
+    "examTrap": "⚠️ **Trampa de Parcial:**\nIntentar hacer `act.sig = prev` sin haber guardado antes `sig = act.sig`. Al pisar `act.sig` perdiste instantáneamente la pista de todos los nodos que venían después.",
+    "bigO": "⏱️ **Costo:**\n* **Tiempo:** $O(n)$ — Recorre cada nodo una sola vez.\n* **Espacio Auxiliar:** $O(1)$ — Solamente tres punteros en la pila de ejecución. ¡Óptimo absoluto!",
+    "code": "public static Nodo invertirLista(Nodo primero) {\n    Nodo prev = null;\n    Nodo act = primero;\n    Nodo sig = null;\n\n    while (act != null) {\n        sig = act.sig;   // 1. Guardar referencia al siguiente\n        act.sig = prev;  // 2. Invertir la flecha hacia el anterior\n        prev = act;      // 3. Mover prev un paso adelante\n        act = sig;       // 4. Mover act un paso adelante\n    }\n\n    return prev; // 'prev' es la nueva cabeza de la lista invertida\n}",
+    "sim": {
+      "type": "nodes",
+      "initial": {
+        "nodes": [
+          {
+            "id": 1,
+            "val": 1,
+            "sig": 2
+          },
+          {
+            "id": 2,
+            "val": 2,
+            "sig": 3
+          },
+          {
+            "id": 3,
+            "val": 3,
+            "sig": null
+          }
+        ],
+        "pointers": [
+          {
+            "name": "primero",
+            "nodeId": 1
+          }
+        ]
+      },
+      "steps": [
+        {
+          "codeLine": 3,
+          "msg": "Lista: [1] ➔ [2] ➔ [3]. prev = null, act = nodo(1).",
+          "nodes": [
+            {
+              "id": 1,
+              "val": 1,
+              "sig": 2
+            },
+            {
+              "id": 2,
+              "val": 2,
+              "sig": 3
+            },
+            {
+              "id": 3,
+              "val": 3,
+              "sig": null
+            }
+          ],
+          "pointers": [
+            {
+              "name": "act",
+              "nodeId": 1
+            }
+          ]
+        },
+        {
+          "codeLine": 8,
+          "msg": "Invertimos flecha del nodo 1: ahora apunta a null. prev = 1, act = 2.",
+          "nodes": [
+            {
+              "id": 1,
+              "val": 1,
+              "sig": null
+            },
+            {
+              "id": 2,
+              "val": 2,
+              "sig": 3
+            },
+            {
+              "id": 3,
+              "val": 3,
+              "sig": null
+            }
+          ],
+          "pointers": [
+            {
+              "name": "prev",
+              "nodeId": 1
+            },
+            {
+              "name": "act",
+              "nodeId": 2
+            }
+          ]
+        },
+        {
+          "codeLine": 8,
+          "msg": "Invertimos flecha del nodo 2: ahora apunta a 1. prev = 2, act = 3.",
+          "nodes": [
+            {
+              "id": 2,
+              "val": 2,
+              "sig": 1
+            },
+            {
+              "id": 1,
+              "val": 1,
+              "sig": null
+            },
+            {
+              "id": 3,
+              "val": 3,
+              "sig": null
+            }
+          ],
+          "pointers": [
+            {
+              "name": "prev",
+              "nodeId": 2
+            },
+            {
+              "name": "act",
+              "nodeId": 3
+            }
+          ]
+        },
+        {
+          "codeLine": 8,
+          "msg": "Invertimos flecha del nodo 3: ahora apunta a 2. prev = 3, act = null.",
+          "nodes": [
+            {
+              "id": 3,
+              "val": 3,
+              "sig": 2
+            },
+            {
+              "id": 2,
+              "val": 2,
+              "sig": 1
+            },
+            {
+              "id": 1,
+              "val": 1,
+              "sig": null
+            }
+          ],
+          "pointers": [
+            {
+              "name": "prev",
+              "nodeId": 3
+            }
+          ]
+        },
+        {
+          "codeLine": 13,
+          "msg": "Bucle finalizado. Retornamos 'prev' (nodo 3). Lista resultante: [3] ➔ [2] ➔ [1].",
+          "nodes": [
+            {
+              "id": 3,
+              "val": 3,
+              "sig": 2
+            },
+            {
+              "id": 2,
+              "val": 2,
+              "sig": 1
+            },
+            {
+              "id": 1,
+              "val": 1,
+              "sig": null
+            }
+          ],
+          "pointers": [
+            {
+              "name": "nuevaCabeza",
+              "nodeId": 3
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "E22",
+    "cat": "arboles",
+    "catLabel": "Árboles Binarios (ABB)",
+    "difficulty": "Básico Clave",
+    "title": "Contar Nodos Totales (La Plantilla Sagrada de Recursión)",
+    "tag": "Recursión Base",
+    "summary": "El arquetipo fundamental de recursión pura: Caso Base + Izquierda + Derecha.",
+    "mision": "Calcular la cantidad total de nodos en un ABBTDA usando recursión limpia sin variables globales ni bucles.",
+    "mentalClick": "💡 **El Click Mental:**\nUn árbol binario se define de forma recursiva (un nodo con dos subárboles que también son árboles).\nPor lo tanto, **todo algoritmo de árbol se piensa en 2 pasos**:\n1. **Caso Base (¿Cuándo frenar?):** Si el árbol está vacío (`a.ArbolVacio()`), tiene **0** nodos.\n2. **Paso Recursivo (¿Cómo combinar?):** El total de nodos es:\n   `1 (el nodo actual) + contar(HijoIzquierdo) + contar(HijoDerecho)`",
+    "examTrap": "⚠️ **Trampa de Parcial habitual:**\nIntentar usar variables `static` fuera de la función o bucles `while`. Los docentes de Algoritmos exigen que los métodos de árboles sean **funciones recursivas puras** que retornen el cálculo en la propia llamada.",
+    "bigO": "⏱️ **Costo:**\n* **Tiempo:** $O(n)$ — Visita exactamente una vez cada nodo del árbol.\n* **Espacio (Stack de llamada):** $O(h)$ donde $h$ es la altura del árbol ($O(\\log n)$ si está balanceado, $O(n)$ si degenera en lista).",
+    "code": "public static int contarNodos(ABBTDA a) {\n    // Caso Base: Árbol vacío no tiene nodos\n    if (a.ArbolVacio()) {\n        return 0;\n    }\n\n    // Paso Recursivo: La raíz actual (1) + hijos izquierdo y derecho\n    return 1 + contarNodos(a.HijoIzq()) + contarNodos(a.HijoDer());\n}",
+    "sim": {
+      "type": "tree",
+      "initial": {
+        "tree": {
+          "val": 20,
+          "left": {
+            "val": 10,
+            "left": null,
+            "right": null
+          },
+          "right": {
+            "val": 30,
+            "left": null,
+            "right": null
+          }
+        }
+      },
+      "steps": [
+        {
+          "codeLine": 3,
+          "msg": "Evaluamos Raíz (20): no está vacío. Hacemos 1 + contar(10) + contar(30).",
+          "activeNode": 20
+        },
+        {
+          "codeLine": 3,
+          "msg": "Bajamos a Hijo Izquierdo (10): no vacío. Hijos son vacíos (0 + 0). Retorna 1.",
+          "activeNode": 10
+        },
+        {
+          "codeLine": 3,
+          "msg": "Bajamos a Hijo Derecho (30): no vacío. Hijos son vacíos (0 + 0). Retorna 1.",
+          "activeNode": 30
+        },
+        {
+          "codeLine": 8,
+          "msg": "Suma final en raíz 20: 1 + 1 (izq) + 1 (der) = 3 nodos en total.",
+          "activeNode": 20
+        }
+      ]
+    }
+  },
+  {
+    "id": "E23",
+    "cat": "arboles",
+    "catLabel": "Árboles Binarios (ABB)",
+    "difficulty": "Intermedio Clave",
+    "title": "Altura / Profundidad Máxima del Árbol",
+    "tag": "Métricas de Árboles",
+    "summary": "Calcular la longitud del camino más largo desde la raíz hasta la hoja más profunda.",
+    "mision": "Dado un ABBTDA, calcular su altura (altura de árbol vacío = 0, árbol con solo raíz = 1).",
+    "mentalClick": "💡 **El Click Mental:**\nLa altura de un árbol depende de cuál de sus dos ramas llegó más profundo:\n* Si el árbol está vacío $\\implies$ altura 0.\n* Si tiene al menos la raíz, su altura será:\n  `1 + Math.max(altura(HijoIzq), altura(HijoDer))`",
+    "examTrap": "⚠️ **Trampa de Parcial:**\nLlamar a `altura(a.HijoIzq())` dos veces en vez de usar `Math.max` o guardar el resultado en variables. Si llamas a la recursión múltiples veces para la misma rama, conviertes un algoritmo lineal $O(n)$ en un algoritmo exponencial $O(2^n)$ inaceptable.",
+    "bigO": "⏱️ **Costo:**\n* **Tiempo:** $O(n)$ — Recorrido completo de todos los nodos.\n* **Espacio:** $O(h)$ en la pila de recursión.",
+    "code": "public static int altura(ABBTDA a) {\n    if (a.ArbolVacio()) {\n        return 0;\n    }\n\n    int altIzq = altura(a.HijoIzq());\n    int altDer = altura(a.HijoDer());\n\n    return 1 + Math.max(altIzq, altDer);\n}",
+    "sim": {
+      "type": "tree",
+      "initial": {
+        "tree": {
+          "val": 50,
+          "left": {
+            "val": 25,
+            "left": {
+              "val": 10,
+              "left": null,
+              "right": null
+            },
+            "right": null
+          },
+          "right": {
+            "val": 75,
+            "left": null,
+            "right": null
+          }
+        }
+      },
+      "steps": [
+        {
+          "codeLine": 2,
+          "msg": "Calculamos altura desde Raíz 50.",
+          "activeNode": 50
+        },
+        {
+          "codeLine": 6,
+          "msg": "Rama izquierda baja a 25 y luego a 10. Altura del nodo 10 = 1.",
+          "activeNode": 10
+        },
+        {
+          "codeLine": 6,
+          "msg": "Rama izquierda en nodo 25: 1 + max(1, 0) = 2.",
+          "activeNode": 25
+        },
+        {
+          "codeLine": 7,
+          "msg": "Rama derecha en nodo 75: hoja simple = 1.",
+          "activeNode": 75
+        },
+        {
+          "codeLine": 9,
+          "msg": "Raíz 50: 1 + max(altIzq: 2, altDer: 1) = 3 niveles de altura.",
+          "activeNode": 50
+        }
+      ]
+    }
+  },
+  {
+    "id": "E24",
+    "cat": "arboles",
+    "catLabel": "Árboles Binarios (ABB)",
+    "difficulty": "Intermedio",
+    "title": "Contar Hojas (Nodos sin Descendencia)",
+    "tag": "Nodos Especiales",
+    "summary": "Contar cuántos nodos terminales (hojas) tiene un árbol binario.",
+    "mision": "Un nodo es 'hoja' si no tiene hijos (tanto su hijo izquierdo como derecho están vacíos). Retornar la cantidad total de hojas.",
+    "mentalClick": "💡 **El Click Mental:**\nTenemos **tres escenarios**:\n1. Árbol vacío $\\implies$ 0 hojas.\n2. Nodo Hoja (`HijoIzq.ArbolVacio() && HijoDer.ArbolVacio()`) $\\implies$ **¡1 hoja encontrada!** (retorna 1).\n3. Nodo Interno (tiene al menos un hijo) $\\implies$ él mismo no es hoja, pero sus hijos pueden tenerlas: `contarHojas(izq) + contarHojas(der)`.",
+    "examTrap": "⚠️ **Trampa de Parcial:**\nOlvidar el caso de nodo interno con un solo hijo. Si no verificas explícitamente la condición de hoja y sumas 1 en la raíz, contarás nodos intermedios por error.",
+    "bigO": "⏱️ **Costo:**\n* **Tiempo:** $O(n)$ — Visita cada nodo para clasificarlo.\n* **Espacio:** $O(h)$ en memoria de stack.",
+    "code": "public static int contarHojas(ABBTDA a) {\n    if (a.ArbolVacio()) {\n        return 0;\n    }\n\n    // Condición sagrada de Nodo Hoja:\n    if (a.HijoIzq().ArbolVacio() && a.HijoDer().ArbolVacio()) {\n        return 1;\n    }\n\n    // Si no es hoja, sumamos las hojas de ambos lados\n    return contarHojas(a.HijoIzq()) + contarHojas(a.HijoDer());\n}",
+    "sim": {
+      "type": "tree",
+      "initial": {
+        "tree": {
+          "val": 40,
+          "left": {
+            "val": 20,
+            "left": null,
+            "right": null
+          },
+          "right": {
+            "val": 60,
+            "left": {
+              "val": 50,
+              "left": null,
+              "right": null
+            },
+            "right": {
+              "val": 70,
+              "left": null,
+              "right": null
+            }
+          }
+        }
+      },
+      "steps": [
+        {
+          "codeLine": 2,
+          "msg": "Raíz 40 tiene hijos ➔ No es hoja. Busca en ramas.",
+          "activeNode": 40
+        },
+        {
+          "codeLine": 7,
+          "msg": "Nodo 20 no tiene hijos ➔ ¡Es Hoja! Retorna 1.",
+          "activeNode": 20
+        },
+        {
+          "codeLine": 2,
+          "msg": "Nodo 60 tiene hijos ➔ No es hoja. Desciende a 50 y 70.",
+          "activeNode": 60
+        },
+        {
+          "codeLine": 7,
+          "msg": "Nodos 50 y 70 son hojas ➔ Aportan 1 + 1 = 2.",
+          "activeNode": 50
+        },
+        {
+          "codeLine": 12,
+          "msg": "Total de hojas: 1 (de nodo 20) + 2 (de nodos 50 y 70) = 3 hojas.",
+          "activeNode": 40
+        }
+      ]
+    }
+  },
+  {
+    "id": "E25",
+    "cat": "arboles",
+    "catLabel": "Árboles Binarios (ABB)",
+    "difficulty": "Básico Clave",
+    "title": "Búsqueda Guiada en ABB (O(log n))",
+    "tag": "Búsqueda Eficiente",
+    "summary": "Aprovechar la propiedad de orden del ABB para buscar en tiempo logarítmico descartando mitades.",
+    "mision": "Determinar si un elemento x pertenece al ABB sin recorrer el árbol entero.",
+    "mentalClick": "💡 **El Click Mental:**\nLa magia del **ABB (Árbol Binario de Búsqueda)** es su regla sagrada:\n* Todos los menores a la raíz están a la **Izquierda**.\n* Todos los mayores a la raíz están a la **Derecha**.\nPor lo tanto:\n* Si $x == a.Raiz()$ $\\implies$ ¡Lo encontramos! (`true`).\n* Si $x < a.Raiz()$ $\\implies$ **Sólo puede estar en la izquierda**. ¡Descartamos la mitad derecha del árbol!\n* Si $x > a.Raiz()$ $\\implies$ **Sólo puede estar en la derecha**.",
+    "examTrap": "⚠️ **Trampa de Parcial:**\nBuscar en ambos hijos como si fuera un árbol binario común (`buscar(izq) || buscar(der)`). Si haces eso, el profesor te califica mal porque desaprovechaste la propiedad fundamental del ABB convirtiendo una búsqueda $O(\\log n)$ en $O(n)$.",
+    "bigO": "⏱️ **Costo:**\n* **Tiempo:** $O(\\log n)$ en árboles balanceados (divide y vencerás), $O(n)$ en el peor caso degenerado.\n* **Espacio:** $O(h)$ por las llamadas recursivas.",
+    "code": "public static boolean perteneceABB(ABBTDA a, int x) {\n    if (a.ArbolVacio()) {\n        return false; // Llegamos a una rama vacía: no está\n    }\n\n    if (a.Raiz() == x) {\n        return true;  // ¡Encontrado!\n    }\n\n    // Navegación inteligente guiada por la clave\n    if (x < a.Raiz()) {\n        return perteneceABB(a.HijoIzq(), x);\n    } else {\n        return perteneceABB(a.HijoDer(), x);\n    }\n}",
+    "sim": {
+      "type": "tree",
+      "initial": {
+        "tree": {
+          "val": 50,
+          "left": {
+            "val": 30,
+            "left": {
+              "val": 20,
+              "left": null,
+              "right": null
+            },
+            "right": {
+              "val": 40,
+              "left": null,
+              "right": null
+            }
+          },
+          "right": {
+            "val": 70,
+            "left": null,
+            "right": {
+              "val": 80,
+              "left": null,
+              "right": null
+            }
+          }
+        }
+      },
+      "steps": [
+        {
+          "codeLine": 6,
+          "msg": "Buscamos X = 40. Raíz actual: 50. 40 < 50 ➔ Descartamos toda la rama derecha [70, 80]. Vamos a la izquierda.",
+          "activeNode": 50
+        },
+        {
+          "codeLine": 11,
+          "msg": "Raíz actual: 30. 40 > 30 ➔ Descartamos rama izquierda [20]. Vamos a la derecha.",
+          "activeNode": 30
+        },
+        {
+          "codeLine": 6,
+          "msg": "Raíz actual: 40. 40 == 40 ➔ ¡Encontrado! Retornamos true.",
+          "activeNode": 40
+        }
+      ]
+    }
+  },
+  {
+    "id": "E26",
+    "cat": "arboles",
+    "catLabel": "Árboles Binarios (ABB)",
+    "difficulty": "Parcial Clave",
+    "title": "Sumar Nodos en el Nivel K",
+    "tag": "Nivelación y Parámetros",
+    "summary": "Sumar únicamente los nodos que se encuentran exactamente a distancia K de la raíz.",
+    "mision": "Dado un árbol y un entero k >= 0 (donde la raíz está en k = 0), sumar todos los nodos en ese nivel decreciendo el contador k.",
+    "mentalClick": "💡 **El Click Mental:**\n¿Cómo sabe la recursión en qué nivel estamos sin variables globales?\n¡Con el truco de la **cuenta regresiva**!\n* En la raíz empezamos con $k$.\n* Al descender a un hijo, estamos a un paso menos del objetivo: pasamos **$k - 1$**.\n* Cuando **$k == 0$**, ¡significa que llegamos exactamente al nivel deseado! Retornamos el valor de esa raíz.\n* Si el árbol queda vacío antes de llegar a $k == 0$, retornamos 0.",
+    "examTrap": "⚠️ **Trampa de Parcial:**\nContinuar la recursión hacia abajo cuando $k == 0$. Una vez alcanzado $k == 0$, **no debes descender a los hijos**, solo retornar `a.Raiz()`.",
+    "bigO": "⏱️ **Costo:**\n* **Tiempo:** $O(n)$ en el peor caso si debe bajar por todo el árbol.\n* **Espacio:** $O(k)$ memoria en el stack.",
+    "code": "public static int sumarNivelK(ABBTDA a, int k) {\n    if (a.ArbolVacio()) {\n        return 0;\n    }\n\n    // Caso objetivo: llegamos al nivel K\n    if (k == 0) {\n        return a.Raiz();\n    }\n\n    // Cuenta regresiva: k - 1 en cada hijo\n    return sumarNivelK(a.HijoIzq(), k - 1) + sumarNivelK(a.HijoDer(), k - 1);\n}",
+    "sim": {
+      "type": "tree",
+      "initial": {
+        "tree": {
+          "val": 100,
+          "left": {
+            "val": 50,
+            "left": {
+              "val": 20,
+              "left": null,
+              "right": null
+            },
+            "right": {
+              "val": 80,
+              "left": null,
+              "right": null
+            }
+          },
+          "right": {
+            "val": 150,
+            "left": null,
+            "right": {
+              "val": 200,
+              "left": null,
+              "right": null
+            }
+          }
+        }
+      },
+      "steps": [
+        {
+          "codeLine": 2,
+          "msg": "Queremos sumar en Nivel K = 2. Raíz 100 está en k = 2.",
+          "activeNode": 100
+        },
+        {
+          "codeLine": 12,
+          "msg": "Descendemos a nodos 50 y 150 con k = 1.",
+          "activeNode": 50
+        },
+        {
+          "codeLine": 7,
+          "msg": "Descendemos a nodos [20, 80, 200] con k = 0 ➔ ¡Objetivo alcanzado! Aportan sus raíces.",
+          "activeNode": 20
+        },
+        {
+          "codeLine": 12,
+          "msg": "Suma final de nivel 2: 20 + 80 + 200 = 300.",
+          "activeNode": 100
+        }
+      ]
+    }
+  },
+  {
+    "id": "E27",
+    "cat": "arboles",
+    "catLabel": "Árboles Binarios (ABB)",
+    "difficulty": "Básico Clave",
+    "title": "Los 3 Recorridos Sagrados: In-Order, Pre-Order y Post-Order",
+    "tag": "Recorridos Clásicos",
+    "summary": "Comprender la diferencia crucial entre In-Order (ordenado), Pre-Order (copia) y Post-Order (liberación).",
+    "mision": "Generar una ColaTDA con los elementos del árbol visitados según el recorrido In-Order (Izquierda ➔ Raíz ➔ Derecha).",
+    "mentalClick": "💡 **El Click Mental:**\nLa posición de la **Raíz** en el código le da el nombre al recorrido:\n* **In-Order (En-medio):** Izquierda ➔ **Raíz** ➔ Derecha.\n  * *Poder secreto:* ¡En un ABB siempre entrega los números **ordenados de menor a mayor**!\n* **Pre-Order (Antes):** **Raíz** ➔ Izquierda ➔ Derecha.\n  * *Poder secreto:* Ideal para clonar árboles o guardarlos en archivo respetando la jerarquía.\n* **Post-Order (Después):** Izquierda ➔ Derecha ➔ **Raíz**.\n  * *Poder secreto:* Ideal para eliminar árboles o calcular tamaños de abajo hacia arriba.",
+    "examTrap": "⚠️ **Trampa de Parcial:**\nEn un ejercicio donde piden 'listar los elementos ordenados', muchos hacen un algoritmo de ordenamiento complejo (como Burbujeo o Quicksort). Si tienes un ABB, **un simple recorrido In-Order ya te da todo ordenado en tiempo $O(n)$**.",
+    "bigO": "⏱️ **Costo:**\n* **Tiempo:** $O(n)$ — Visita exactamente una vez cada nodo.\n* **Espacio:** $O(n)$ para la cola resultante.",
+    "code": "public static void inOrder(ABBTDA a, ColaTDA resultado) {\n    if (a.ArbolVacio()) {\n        return;\n    }\n\n    // 1. Visitar subárbol izquierdo (menores)\n    inOrder(a.HijoIzq(), resultado);\n\n    // 2. Visitar raíz (centro)\n    resultado.Acolar(a.Raiz());\n\n    // 3. Visitar subárbol derecho (mayores)\n    inOrder(a.HijoDer(), resultado);\n}",
+    "sim": {
+      "type": "tree",
+      "initial": {
+        "tree": {
+          "val": 50,
+          "left": {
+            "val": 20,
+            "left": null,
+            "right": null
+          },
+          "right": {
+            "val": 80,
+            "left": null,
+            "right": null
+          }
+        }
+      },
+      "steps": [
+        {
+          "codeLine": 7,
+          "msg": "In-Order: Primero visitamos izquierda profunda (nodo 20).",
+          "activeNode": 20
+        },
+        {
+          "codeLine": 10,
+          "msg": "Acolamos 20 en la cola. Cola: [20].",
+          "activeNode": 20
+        },
+        {
+          "codeLine": 10,
+          "msg": "Subimos a la raíz 50. Acolamos 50. Cola: [20, 50].",
+          "activeNode": 50
+        },
+        {
+          "codeLine": 13,
+          "msg": "Visitamos derecha (nodo 80). Acolamos 80. Cola: [20, 50, 80].",
+          "activeNode": 80
+        },
+        {
+          "codeLine": 14,
+          "msg": "¡Finalizado! Los datos quedaron perfectamente ordenados: [20, 50, 80].",
+          "activeNode": 50
+        }
+      ]
+    }
+  },
+  {
+    "id": "E28",
+    "cat": "grafos",
+    "catLabel": "Grafos Dirigidos",
+    "difficulty": "Básico Clave",
+    "title": "Grado de Entrada y Salida de un Vértice",
+    "tag": "Métricas de Grafos",
+    "summary": "Contar cuántas aristas apuntan hacia un vértice (in-degree) y cuántas salen de él (out-degree).",
+    "mision": "Dado un GrafoTDA y un vértice v, calcular su grado de entrada (aristas w ➔ v) y grado de salida (aristas v ➔ w) recorriendo el conjunto de vértices.",
+    "mentalClick": "💡 **El Click Mental:**\nEn un grafo dirigido con matriz o métodos de TDA:\n* **Grado de Salida (Out-Degree):** ¿A cuántos vértices apunta $v$?\n  Recorremos todos los vértices $w$: si `g.ExisteArista(v, w)`, sumamos 1.\n* **Grado de Entrada (In-Degree):** ¿Cuántos vértices apuntan hacia $v$?\n  Recorremos todos los vértices $w$: si `g.ExisteArista(w, v)`, sumamos 1.",
+    "examTrap": "⚠️ **Trampa de Parcial:**\nInvertir los parámetros en `ExisteArista(origen, destino)`. En grafos dirigidos, `ExisteArista(v, w)` NO es lo mismo que `ExisteArista(w, v)`.",
+    "bigO": "⏱️ **Costo:**\n* **Tiempo:** $O(|V| \\cdot \\text{costo}(ExisteArista))$ — Recorre los $|V|$ vértices.\n* **Espacio:** $O(|V|)$ para clonar el conjunto de vértices.",
+    "code": "public static int gradoSalida(GrafoTDA g, int v) {\n    int salida = 0;\n    ConjuntoTDA vertices = copiarConjunto(g.Vertices());\n\n    while (!vertices.ConjuntoVacio()) {\n        int w = vertices.Elegir();\n        if (g.ExisteArista(v, w)) {\n            salida++;\n        }\n        vertices.Sacar(w);\n    }\n    return salida;\n}\n\npublic static int gradoEntrada(GrafoTDA g, int v) {\n    int entrada = 0;\n    ConjuntoTDA vertices = copiarConjunto(g.Vertices());\n\n    while (!vertices.ConjuntoVacio()) {\n        int w = vertices.Elegir();\n        if (g.ExisteArista(w, v)) { // ¡Nota el orden invertido!\n            entrada++;\n        }\n        vertices.Sacar(w);\n    }\n    return entrada;\n}",
+    "sim": {
+      "type": "graph",
+      "initial": {
+        "vertices": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "edges": [
+          {
+            "from": 1,
+            "to": 2
+          },
+          {
+            "from": 1,
+            "to": 3
+          },
+          {
+            "from": 4,
+            "to": 1
+          }
+        ],
+        "targetNode": 1
+      },
+      "steps": [
+        {
+          "codeLine": 5,
+          "msg": "Analizamos Vértice 1: tiene aristas dirigidas salientes hacia 2 y 3. Grado Salida = 2.",
+          "activeEdge": {
+            "from": 1,
+            "to": 2
+          }
+        },
+        {
+          "codeLine": 8,
+          "msg": "Arista saliente 1 ➔ 3 confirmada.",
+          "activeEdge": {
+            "from": 1,
+            "to": 3
+          }
+        },
+        {
+          "codeLine": 18,
+          "msg": "Analizamos aristas entrantes: Vértice 4 apunta hacia 1 (4 ➔ 1). Grado Entrada = 1.",
+          "activeEdge": {
+            "from": 4,
+            "to": 1
+          }
+        },
+        {
+          "codeLine": 24,
+          "msg": "Resultado Vértice 1: Entrada = 1, Salida = 2.",
+          "activeNode": 1
+        }
+      ]
+    }
+  },
+  {
+    "id": "E29",
+    "cat": "grafos",
+    "catLabel": "Grafos Dirigidos",
+    "difficulty": "Parcial Clave",
+    "title": "Detección de Sumidero Universal y Fuente",
+    "tag": "Vértices Especiales",
+    "summary": "Identificar si un vértice es un sumidero universal (todos van hacia él, pero él no va a nadie).",
+    "mision": "Determinar si existe un 'Sumidero Universal' en un GrafoTDA: un vértice al que todos los demás vértices apuntan directamente (grado de entrada = |V| - 1) y del cual no sale ninguna arista (grado de salida = 0).",
+    "mentalClick": "💡 **El Click Mental:**\nUn sumidero universal es como un agujero negro:\n* Todo entra hacia él: $InDegree(v) == |V| - 1$ (todos los demás nodos apuntan a $v$, sin contar auto-bucles).\n* Nada sale de él: $OutDegree(v) == 0$.\nBasta con iterar cada vértice, calcular sus dos grados, y verificar si cumple ambas condiciones.",
+    "examTrap": "⚠️ **Trampa de Parcial:**\nOlvidar restar 1 al total de vértices al comparar el grado de entrada. Un vértice no puede tener arista hacia sí mismo en la definición estándar de sumidero, por lo que el grado de entrada debe ser $|V|-1$, no $|V|$.",
+    "bigO": "⏱️ **Costo:**\n* **Tiempo:** $O(|V|^2)$ al auditar los grados de cada vértice.\n* **Espacio:** $O(|V|)$ para almacenar copias de conjuntos.",
+    "code": "public static int buscarSumideroUniversal(GrafoTDA g) {\n    ConjuntoTDA vertices = copiarConjunto(g.Vertices());\n    int totalVertices = contarElementosConjunto(vertices);\n\n    while (!vertices.ConjuntoVacio()) {\n        int v = vertices.Elegir();\n\n        int salida = gradoSalida(g, v);\n        int entrada = gradoEntrada(g, v);\n\n        // Condición matemática de Sumidero Universal:\n        if (salida == 0 && entrada == (totalVertices - 1)) {\n            return v; // ¡Encontrado!\n        }\n\n        vertices.Sacar(v);\n    }\n\n    return -1; // No existe sumidero en este grafo\n}",
+    "sim": {
+      "type": "graph",
+      "initial": {
+        "vertices": [
+          1,
+          2,
+          3
+        ],
+        "edges": [
+          {
+            "from": 1,
+            "to": 3
+          },
+          {
+            "from": 2,
+            "to": 3
+          }
+        ],
+        "targetNode": 3
+      },
+      "steps": [
+        {
+          "codeLine": 8,
+          "msg": "Total vértices = 3. Requisito para sumidero: Salida == 0 y Entrada == 2.",
+          "activeNode": null
+        },
+        {
+          "codeLine": 10,
+          "msg": "Vértice 1: Salida = 1, Entrada = 0 ➔ No es sumidero.",
+          "activeNode": 1
+        },
+        {
+          "codeLine": 10,
+          "msg": "Vértice 2: Salida = 1, Entrada = 0 ➔ No es sumidero.",
+          "activeNode": 2
+        },
+        {
+          "codeLine": 14,
+          "msg": "Vértice 3: Salida = 0 y Entrada = 2 (|V|-1). ¡Es el Sumidero Universal!",
+          "activeNode": 3
+        }
+      ]
+    }
+  },
+  {
+    "id": "E30",
+    "cat": "grafos",
+    "catLabel": "Grafos Dirigidos",
+    "difficulty": "Parcial Clave",
+    "title": "¿Existe Camino entre Vértice A y Vértice B? (BFS con Visitados)",
+    "tag": "Recorrido y Búsqueda en Grafos",
+    "summary": "El algoritmo rey de parciales: determinar si existe camino entre dos nodos evitando ciclos infinitos.",
+    "mision": "Dado un GrafoTDA, un vértice origen y un destino, retornar true si es posible alcanzar destino navegando por las aristas dirigidas.",
+    "mentalClick": "💡 **El Click Mental:**\n¿Por qué en árboles no usamos 'visitados' pero en grafos SÍ es obligatorio?\n* Los árboles no tienen ciclos (nunca puedes volver a un nodo anterior).\n* ¡Los grafos SÍ tienen ciclos ($A \\to B \\to C \\to A$)! Sin un registro de **visitados**, caerías en un bucle infinito que colgaría tu computadora.\nUsamos el algoritmo BFS (Búsqueda en Anchura):\n1. Una `ColaTDA pendientes` con los vértices por explorar.\n2. Un `ConjuntoTDA visitados` para recordar dónde ya estuvimos.\n3. Desacolamos un vértice: si es el destino, ¡retornamos `true`! Si no, revisamos todos sus vecinos: los que no hayan sido visitados se agregan a `visitados` y a `pendientes`.",
+    "examTrap": "⚠️ **Trampa de Parcial mortal:**\nNo marcar el vértice como visitado en el momento exacto en que se encola. Si demoras el marcado, un mismo vértice puede ser encolado múltiples veces produciendo redundancia y loops.",
+    "bigO": "⏱️ **Costo:**\n* **Tiempo:** $O(|V| + |E|)$ — Visita cada vértice y arista a lo sumo una vez.\n* **Espacio:** $O(|V|)$ para la cola de exploración y el conjunto de visitados.",
+    "code": "public static boolean existeCamino(GrafoTDA g, int origen, int destino) {\n    if (origen == destino) return true;\n\n    ColaTDA cola = new ColaPU();\n    cola.InicializarCola();\n\n    ConjuntoTDA visitados = new ConjuntoTA();\n    visitados.InicializarConjunto();\n\n    // Arrancamos desde el origen\n    cola.Acolar(origen);\n    visitados.Agregar(origen);\n\n    while (!cola.ColaVacia()) {\n        int actual = cola.Primero();\n        cola.Desacolar();\n\n        if (actual == destino) {\n            return true; // ¡Camino encontrado con éxito!\n        }\n\n        // Explorar todos los vecinos adyacentes de 'actual'\n        ConjuntoTDA vertices = copiarConjunto(g.Vertices());\n        while (!vertices.ConjuntoVacio()) {\n            int vecino = vertices.Elegir();\n            if (g.ExisteArista(actual, vecino) && !visitados.Pertenece(vecino)) {\n                visitados.Agregar(vecino);\n                cola.Acolar(vecino);\n            }\n            vertices.Sacar(vecino);\n        }\n    }\n\n    return false; // Se agotaron los caminos posibles\n}",
+    "sim": {
+      "type": "graph",
+      "initial": {
+        "vertices": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "edges": [
+          {
+            "from": 1,
+            "to": 2
+          },
+          {
+            "from": 2,
+            "to": 3
+          },
+          {
+            "from": 3,
+            "to": 4
+          },
+          {
+            "from": 3,
+            "to": 1
+          }
+        ],
+        "targetNode": 4
+      },
+      "steps": [
+        {
+          "codeLine": 12,
+          "msg": "Iniciamos BFS en Origen 1. Visitados = {1}. Cola = [1]. Destino = 4.",
+          "activeNode": 1,
+          "visited": [
+            1
+          ]
+        },
+        {
+          "codeLine": 16,
+          "msg": "Desacolamos 1. Vecino adyacente es 2. No visitado ➔ Agregamos 2 a visitados y cola.",
+          "activeNode": 2,
+          "visited": [
+            1,
+            2
+          ],
+          "activeEdge": {
+            "from": 1,
+            "to": 2
+          }
+        },
+        {
+          "codeLine": 16,
+          "msg": "Desacolamos 2. Vecino adyacente es 3. Agregamos 3 a visitados y cola.",
+          "activeNode": 3,
+          "visited": [
+            1,
+            2,
+            3
+          ],
+          "activeEdge": {
+            "from": 2,
+            "to": 3
+          }
+        },
+        {
+          "codeLine": 26,
+          "msg": "Desacolamos 3. Tiene arista a 1 (ciclo), pero como 1 YA está en visitados, se ignora. Arista a 4 es nueva ➔ Encolamos 4.",
+          "activeNode": 4,
+          "visited": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "activeEdge": {
+            "from": 3,
+            "to": 4
+          }
+        },
+        {
+          "codeLine": 19,
+          "msg": "Desacolamos 4: ¡actual == destino! Retorna true. Camino encontrado sin quedar atrapado en ciclos.",
+          "activeNode": 4,
+          "visited": [
+            1,
+            2,
+            3,
+            4
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "E31",
+    "cat": "grafos",
+    "catLabel": "Grafos Dirigidos",
+    "difficulty": "Intermedio",
+    "title": "Detección de Vértices Aislados",
+    "tag": "Auditoría de Grafos",
+    "summary": "Identificar todos los vértices desconectados que no tienen ninguna arista entrante ni saliente.",
+    "mision": "Dado un GrafoTDA, devolver un ConjuntoTDA con todos los vértices aislados (grado de entrada == 0 y grado de salida == 0).",
+    "mentalClick": "💡 **El Click Mental:**\nUn vértice está 'aislado' si vive en una isla desierta:\n* Nadie puede llegar a él ($InDegree == 0$).\n* Él no puede llegar a nadie ($OutDegree == 0$).\nIteramos todos los vértices del grafo: a los que cumplan ambas condiciones simultáneas, los agregamos al conjunto resultado.",
+    "examTrap": "⚠️ **Trampa de Parcial:**\nConfundir 'aislado' con 'fuente' (solo salen aristas) o 'sumidero' (solo entran aristas). Para ser aislado, **ambos grados deben ser estrictamente cero**.",
+    "bigO": "⏱️ **Costo:**\n* **Tiempo:** $O(|V|^2)$ por verificar aristas con todos los demás vértices.\n* **Espacio:** $O(|V|)$ para el conjunto resultado.",
+    "code": "public static ConjuntoTDA verticesAislados(GrafoTDA g) {\n    ConjuntoTDA aislados = new ConjuntoTA();\n    aislados.InicializarConjunto();\n\n    ConjuntoTDA vertices = copiarConjunto(g.Vertices());\n    while (!vertices.ConjuntoVacio()) {\n        int v = vertices.Elegir();\n\n        if (gradoEntrada(g, v) == 0 && gradoSalida(g, v) == 0) {\n            aislados.Agregar(v);\n        }\n\n        vertices.Sacar(v);\n    }\n\n    return aislados;\n}",
+    "sim": {
+      "type": "graph",
+      "initial": {
+        "vertices": [
+          1,
+          2,
+          3,
+          5
+        ],
+        "edges": [
+          {
+            "from": 1,
+            "to": 2
+          },
+          {
+            "from": 2,
+            "to": 3
+          }
+        ],
+        "targetNode": 5
+      },
+      "steps": [
+        {
+          "codeLine": 7,
+          "msg": "Evaluamos Vértices 1, 2, 3: tienen aristas activas ➔ No están aislados.",
+          "activeNode": null
+        },
+        {
+          "codeLine": 10,
+          "msg": "Evaluamos Vértice 5: Entrada = 0, Salida = 0. ¡Está completamente aislado!",
+          "activeNode": 5
+        },
+        {
+          "codeLine": 17,
+          "msg": "Conjunto de aislados final: {5}.",
+          "activeNode": 5
+        }
+      ]
+    }
+  }
+];
